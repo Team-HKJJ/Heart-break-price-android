@@ -1,0 +1,16 @@
+package com.hkjj.heartbreakprice.core.di
+
+import com.hkjj.heartbreakprice.data.repository.MockWishRepositoryImpl
+import com.hkjj.heartbreakprice.data.repository.ProductRepositoryImpl
+import com.hkjj.heartbreakprice.domain.repository.ProductRepository
+import com.hkjj.heartbreakprice.domain.repository.WishRepository
+import org.koin.dsl.module
+
+val repositoryModule = module {
+    single<ProductRepository> {
+        ProductRepositoryImpl(get())
+    }
+    single<WishRepository> {
+        MockWishRepositoryImpl()
+    }
+}
