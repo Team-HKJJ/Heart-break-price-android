@@ -1,13 +1,11 @@
 package com.hkjj.heartbreakprice.data.repository
 
-import com.hkjj.heartbreakprice.core.Result
-import com.hkjj.heartbreakprice.domain.model.Product
 import com.hkjj.heartbreakprice.domain.model.WishProduct
 import com.hkjj.heartbreakprice.domain.repository.WishRepository
 
 class MockWishRepositoryImpl : WishRepository {
 
-    private val wishProducts =  mutableListOf(
+    private val wishProducts = mutableListOf(
         WishProduct(
             id = "1",
             name = "갤럭시 S24 울트라 256GB",
@@ -65,12 +63,8 @@ class MockWishRepositoryImpl : WishRepository {
         )
     )
 
-    override suspend fun getWishes(): Result<List<WishProduct>, Exception> {
-        return try {
-            Result.Success(wishProducts.toList())
-        } catch (e: Exception) {
-            Result.Error(e)
-        }
+    override suspend fun getWishes(): List<WishProduct> {
+        return wishProducts.toList()
     }
 
     override suspend fun addToWish(wishProduct: WishProduct) {
