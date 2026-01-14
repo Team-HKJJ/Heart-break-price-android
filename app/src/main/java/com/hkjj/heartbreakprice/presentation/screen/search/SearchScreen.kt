@@ -35,7 +35,6 @@ import java.util.*
 fun SearchScreen(
     uiState: SearchUiState,
     onSearchAction: (SearchAction) -> Unit,
-    isFavorite: (String) -> Boolean,
     modifier: Modifier = Modifier
 ) {
     val categories = listOf("전체", "스마트폰", "노트북", "헤드폰", "스마트워치", "카메라", "태블릿")
@@ -110,7 +109,7 @@ fun SearchScreen(
                 items(uiState.filteredProducts) { product ->
                     ProductItem(
                         product = product,
-                        isFavorite = isFavorite(product.id),
+                        isFavorite = uiState.isFavorite(product.id),
                         onToggleFavorite = { onSearchAction(SearchAction.AddToFavorite(product)) }
                     )
                 }
