@@ -1,0 +1,66 @@
+@startuml
+
+class Product {
+    id: String
+    name: String
+    price: Int
+    originalPrice: Int?
+    image: String
+    category: String
+    shop: String
+}
+
+class FavoriteProduct {
+    targetPrice: Int?
+    addedDate: String
+}
+
+class User {
+    name: String
+    email: String
+    password: String
+}
+
+class Notification {
+    id: String
+    type: NotificationType
+    productName: String
+    productImage: String
+    message: String
+    timestamp: Date
+    isRead: Boolean
+    oldPrice: Int?
+    newPrice: Int?
+}
+
+enum NotificationType {
+    PRICE_DROP,
+    TARGET_REACHED,
+    BACK_IN_STOCK
+}
+
+interface ShoppingRepository {
+    suspend fun getProducts(query: String): List<Product>
+    suspend fun getFavorites(): List<FavoriteProduct>
+    suspend fun addToFavorites(product: Product)
+    suspend fun removeFromFavorites(productId: String)
+    suspend fun updateTargetPrice(productId: String, targetPrice: Int)
+}
+
+interface UserRepository {
+    suspend fun signIn(email: String, pw: String): User?
+    suspend fun signUp(user: User)
+    suspend fun signOut()
+    suspend fun getUser(): User?
+}
+
+interface NotificationRepository {
+    suspend fun getNotifications(): List<Notification>
+    suspend fun markAsRead(notificationId: String)
+    suspend fun markAllAsRead()
+    suspend fun deleteNotification(notificationId: String)
+}
+
+FavoriteProduct --|> Product
+
+@enduml
