@@ -219,7 +219,6 @@ fun ProductItem(
                     }
                     Button(
                         onClick = onToggleFavorite,
-                        enabled = !isFavorite,
                         contentPadding = PaddingValues(0.dp),
                         modifier = Modifier
                             .size(32.dp),
