@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Badge
@@ -38,6 +39,7 @@ fun ShoppingScreen(
 ) {
     var currentScreen by rememberSaveable { mutableStateOf("search") }
     val favorites by viewModel.favorites.collectAsState()
+    val notifications by viewModel.notifications.collectAsState()
     val user by viewModel.user.collectAsState()
 
     Scaffold(
@@ -87,6 +89,25 @@ fun ShoppingScreen(
                     alwaysShowLabel = true
                 )
                 NavigationBarItem(
+                    selected = currentScreen == "notifications",
+                    onClick = { currentScreen = "notifications" },
+                    icon = {
+                        if (notifications.count { !it.isRead } > 0) {
+                            BadgedBox(
+                                badge = {
+                                    Badge { Text(notifications.count { !it.isRead }.toString()) }
+                                }
+                            ) {
+                                Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                            }
+                        } else {
+                            Icon(Icons.Default.Notifications, contentDescription = "Notifications")
+                        }
+                    },
+                    label = { Text("알림") },
+                    alwaysShowLabel = true
+                )
+                NavigationBarItem(
                     selected = currentScreen == "settings",
                     onClick = { currentScreen = "settings" },
                     icon = { Icon(Icons.Default.Settings, contentDescription = "Settings") },
@@ -109,6 +130,14 @@ fun ShoppingScreen(
                         favorites = favorites,
                         onRemove = viewModel::removeFromFavorites,
                         onUpdateTargetPrice = viewModel::updateTargetPrice
+                    )
+                }
+                "notifications" -> {
+                    NotificationScreen(
+                        notifications = notifications,
+                        onMarkAsRead = viewModel::markNotificationAsRead,
+                        onMarkAllAsRead = viewModel::markAllNotificationsAsRead,
+                        onDelete = viewModel::deleteNotification
                     )
                 }
                 "settings" -> {
