@@ -39,8 +39,11 @@ enum NotificationType {
     BACK_IN_STOCK
 }
 
-interface ShoppingRepository {
+interface ProductRepository{
     suspend fun getProducts(query: String): List<Product>
+}
+
+interface ShoppingRepository {
     suspend fun getFavorites(): List<FavoriteProduct>
     suspend fun addToFavorites(product: Product)
     suspend fun removeFromFavorites(productId: String)
