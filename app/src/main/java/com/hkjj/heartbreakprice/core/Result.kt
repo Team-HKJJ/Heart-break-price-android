@@ -1,11 +1,11 @@
 package com.hkjj.heartbreakprice.core
 
-sealed class Result<T, E> {
-    data class Success<T>(
+sealed class Result<out T, out E> {
+    data class Success<out T>(
         val data: T
     ) : Result<T, Nothing>()
 
-    data class Error<E>(
+    data class Error<out E>(
         val error: E
     ) : Result<Nothing, E>()
 }
