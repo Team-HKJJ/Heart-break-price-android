@@ -74,10 +74,8 @@ dependencies {
     implementation(libs.koin.compose.viewmodel)
     testImplementation(libs.koin.test)
 
-    // Navigation 2
-    val lifecycle_version = "2.10.0"
-    // ViewModel utilities for Compose
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version")
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
 
     // Coil
     implementation(libs.coilCompose)
@@ -86,8 +84,8 @@ dependencies {
     implementation(libs.retrofit)
 
     // Kotlin Serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.9.0")
+    implementation(libs.kotlinx.serialization.json)
 
     // Mockk
-    implementation(libs.mockk)
+    testImplementation(libs.mockk)
 }
