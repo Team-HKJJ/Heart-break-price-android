@@ -39,11 +39,18 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.systemBarsPadding
+
 @Composable
 fun SignInScreen(
     state: SignInUiState,
     onAction: (SignInAction) -> Unit
 ) {
+    val scrollState = rememberScrollState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -51,13 +58,16 @@ fun SignInScreen(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFFEFF6FF), Color(0xFFE0E7FF)) // blue-50 to indigo-100
                 )
-            ),
+            )
+            .systemBarsPadding()
+            .imePadding(),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(scrollState)
                 .padding(16.dp)
         ) {
             // Logo & Title
@@ -76,7 +86,7 @@ fun SignInScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                "가격 추적 쇼핑",
+                "심쿵가",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF111827)
