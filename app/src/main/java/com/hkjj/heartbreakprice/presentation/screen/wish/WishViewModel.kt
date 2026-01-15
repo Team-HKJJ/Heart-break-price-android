@@ -66,7 +66,7 @@ class WishViewModel(
             when (val result = getWishesUseCase.invoke()) {
                 is Result.Error -> {
                     _uiState.update {
-                        it.copy(errormsg = result.error.message)
+                        it.copy(errorMsg = result.error.message)
                     }
                 }
 
@@ -76,6 +76,11 @@ class WishViewModel(
                     }
                 }
             }
+        }
+    }
+    fun showDialog(){
+        _uiState.update {
+            it.copy(isDialogShow = true)
         }
     }
 }

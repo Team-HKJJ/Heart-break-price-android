@@ -8,6 +8,6 @@ data class WishProduct (
     val image: String,
     val category: String,
     val shop: String,
-    val targetPrice: Int? = null,
+    val targetPrice: Int,
     val addedDate: String = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", java.util.Locale.getDefault()).format(java.util.Date())
 )
