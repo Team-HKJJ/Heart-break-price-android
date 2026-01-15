@@ -11,6 +11,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.hkjj.heartbreakprice.data.repository.AuthRepositoryImpl
 import com.hkjj.heartbreakprice.presentation.screen.main.MainRoot
 import com.hkjj.heartbreakprice.presentation.screen.signin.SignInRoot
@@ -26,49 +27,50 @@ fun NavigationRoot(
 
     NavHost(
         navController = navController,
-        startDestination = "entry",
+        startDestination = Route.Entry,
         modifier = Modifier.safeContentPadding()
     ) {
 
-        composable("entry") {
+        composable<Route.Entry> {
             LaunchedEffect(isSignIn) {
-                val target = if (isSignIn) {
-                    "main"
+                val target: Route = if (isSignIn) {
+                    Route.Main
                 } else {
-                    "sign_in"
+                    Route.SignIn
                 }
 
                 navController.navigate(target) {
-                    popUpTo("entry") { inclusive = true }
+                    popUpTo(Route.Entry) { inclusive = true }
                 }
             }
         }
         /* ===================== */
         /* ===== AUTH FLOW ===== */
         /* ===================== */
-        composable("sign_in") {
-            SignInRoot(onNavigateSignUp = { navController.navigate("sign_up") })
+        composable<Route.SignIn> {
+            SignInRoot(onNavigateSignUp = { navController.navigate(Route.SignUp) })
         }
-        composable("sign_up") {
+        composable<Route.SignUp> {
             SignUpRoot()
         }
 
         /* ===================== */
         /* ===== MAIN FLOW ===== */
         /* ===================== */
-        composable("main") {
+        composable<Route.Main> {
             MainRoot(
                 onNavigateToSubFirst = {
                     /* 상세 화면 넘어갈때 사용하는 콜백 */
-                    //navController.navigate("detail/$it")
+                    //navController.navigate(Route.Detail(it))
                 },
                 onNavigateToSubSecond = {  },
                 onNavigateToSubThird = {  },
                 onNavigateToSubFourth = {  },
             )
         }
-        composable("detail/{param}") {
-            Text("상세화면")
+        composable<Route.Detail> { backStackEntry ->
+            val detail: Route.Detail = backStackEntry.toRoute()
+            Text("상세화면: ${detail.param}")
         }
     }
 }
