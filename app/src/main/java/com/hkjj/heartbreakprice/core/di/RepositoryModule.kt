@@ -1,5 +1,6 @@
 package com.hkjj.heartbreakprice.core.di
 
+import com.hkjj.heartbreakprice.data.repository.AuthRepositoryImpl
 import com.hkjj.heartbreakprice.data.repository.MockWishRepositoryImpl
 import com.hkjj.heartbreakprice.data.repository.ProductRepositoryImpl
 import com.hkjj.heartbreakprice.domain.repository.ProductRepository
@@ -12,5 +13,8 @@ val repositoryModule = module {
     }
     single<WishRepository> {
         MockWishRepositoryImpl()
+    }
+    single {
+        AuthRepositoryImpl()
     }
 }
