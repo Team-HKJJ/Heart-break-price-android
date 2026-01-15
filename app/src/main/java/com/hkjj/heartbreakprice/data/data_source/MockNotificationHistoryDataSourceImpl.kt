@@ -45,4 +45,8 @@ class MockNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
     override suspend fun getAllNotificationHistories(): List<Notification> {
         return mockNotifications
     }
+
+    override suspend fun readAsMarkNotification(id: String) {
+        mockNotifications.map { if (it.id == id) it.copy(isRead = !it.isRead) else it }
+    }
 }
