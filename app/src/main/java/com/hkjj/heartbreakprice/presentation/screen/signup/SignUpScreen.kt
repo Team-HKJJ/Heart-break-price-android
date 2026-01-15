@@ -86,7 +86,7 @@ fun SignUpScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                "가격 추적 쇼핑",
+                "심쿵가",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF111827)
