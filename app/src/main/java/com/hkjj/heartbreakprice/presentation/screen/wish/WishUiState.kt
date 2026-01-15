@@ -4,6 +4,7 @@ import com.hkjj.heartbreakprice.domain.model.WishProduct
 
 data class WishUiState(
     val wishProducts: List<WishProduct> = emptyList(),
-    val errormsg: String? = null
+    val errorMsg: String? = null,
+    val isDialogShow: Boolean = false
 )
 

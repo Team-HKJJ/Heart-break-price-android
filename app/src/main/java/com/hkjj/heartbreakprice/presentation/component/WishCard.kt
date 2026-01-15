@@ -217,17 +217,7 @@ fun WishCard(
     }
 }
 
-fun getPriceStatus(currentPrice: Int, targetPrice: Int?): Pair<String, Color>? {
-    if (targetPrice == null) return null
-    if (currentPrice <= targetPrice) {
-        return "목표가 도달!" to Color(0xFF22C55E) // Green 500
-    }
-    val diff = ((currentPrice - targetPrice).toFloat() / targetPrice) * 100
-    if (diff <= 10) {
-        return "목표가 근접" to Color(0xFFEAB308) // Yellow 500
-    }
-    return "추적 중" to Color(0xFF3B82F6) // Blue 500
-}
+
 
 @Preview(showBackground = true)
 @Composable
