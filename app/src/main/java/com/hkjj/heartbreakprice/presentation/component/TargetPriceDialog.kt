@@ -38,7 +38,7 @@ fun TargetPriceDialog(
     onDismiss: () -> Unit,
     onSave: (Int) -> Unit,
 ) {
-    var priceInput by remember { mutableStateOf(wishProduct.targetPrice?.toString() ?: "") }
+    var priceInput by remember { mutableStateOf(wishProduct.targetPrice.toString()) }
 
     Dialog(onDismissRequest = onDismiss) {
         Card(
