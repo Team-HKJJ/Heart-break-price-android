@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hkjj.heartbreakprice.core.routing.NavigationAction
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
+import com.hkjj.heartbreakprice.presentation.screen.wish.WishRoot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -81,7 +82,7 @@ fun MainRoot(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("search") { SearchRoot() }
-            composable("wish") { Text("Wish") }
+            composable("wish") { WishRoot() }
             composable("notification") { Text("Notification") }
             composable("settings") { Text("Settings") }
         }
