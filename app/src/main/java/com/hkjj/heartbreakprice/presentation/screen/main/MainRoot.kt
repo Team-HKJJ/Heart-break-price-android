@@ -20,6 +20,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hkjj.heartbreakprice.core.routing.NavigationAction
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
+import com.hkjj.heartbreakprice.presentation.screen.setting.SettingRoot
 import com.hkjj.heartbreakprice.presentation.screen.wish.WishRoot
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -84,7 +85,7 @@ fun MainRoot(
             composable("search") { SearchRoot() }
             composable("wish") { WishRoot() }
             composable("notification") { Text("Notification") }
-            composable("settings") { Text("Settings") }
+            composable("settings") { SettingRoot(onLogout = { }) }
         }
     }
 }
