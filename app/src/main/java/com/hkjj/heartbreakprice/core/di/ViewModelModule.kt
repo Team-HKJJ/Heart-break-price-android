@@ -3,6 +3,7 @@ package com.hkjj.heartbreakprice.core.di
 import com.hkjj.heartbreakprice.core.routing.NavigationViewModel
 import com.hkjj.heartbreakprice.presentation.screen.notification.NotificationViewModel
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchViewModel
+import com.hkjj.heartbreakprice.presentation.screen.setting.SettingViewModel
 import com.hkjj.heartbreakprice.presentation.screen.signin.SignInViewModel
 import com.hkjj.heartbreakprice.presentation.screen.signup.SignUpViewModel
 import com.hkjj.heartbreakprice.presentation.screen.wish.WishViewModel
@@ -47,5 +48,12 @@ val viewModelModule = module {
             getNotificationHistoryUseCase = get(),
             readAsMarkNotificationUseCase = get()
         )
+    }
+    
+    viewModel {
+      SettingViewModel(
+            logoutUseCase = get(),
+            getUserUseCase = get()
+       )
     }
 }
