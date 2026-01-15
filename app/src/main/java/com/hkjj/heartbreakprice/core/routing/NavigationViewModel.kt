@@ -1,0 +1,50 @@
+package com.hkjj.heartbreakprice.core.routing
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.hkjj.heartbreakprice.data.repository.AuthRepositoryImpl
+import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+
+class NavigationViewModel(
+    private val authRepository: AuthRepositoryImpl
+) : ViewModel() {
+
+    private val _uiState = MutableStateFlow(NavigationUiState())
+    val uiState = _uiState.asStateFlow()
+
+    private val _event = Channel<NavigationEvent>()
+    val event = _event.receiveAsFlow()
+
+    init {
+        observeAuthStatus()
+    }
+
+    fun onAction(action: NavigationAction) {
+        viewModelScope.launch {
+            when (action) {
+                is NavigationAction.NavigateToMain -> {
+                    _event.send(NavigationEvent.NavigateTo(Route.Main))
+                }
+                is NavigationAction.NavigateToSignUp -> {
+                    _event.send(NavigationEvent.NavigateTo(Route.SignUp))
+                }
+                is NavigationAction.NavigateToDetail -> {
+                    _event.send(NavigationEvent.NavigateTo(Route.Detail(action.id)))
+                }
+            }
+        }
+    }
+
+    private fun observeAuthStatus() {
+        viewModelScope.launch {
+            authRepository.isSignIn.collect { isSignIn ->
+                _uiState.update { it.copy(isSignIn = isSignIn) }
+            }
+        }
+    }
+}

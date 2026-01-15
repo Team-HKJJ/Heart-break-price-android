@@ -18,16 +18,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hkjj.heartbreakprice.core.routing.NavigationAction
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainRoot(
     bottomNavController: NavHostController = rememberNavController(),
-    onNavigateToSubFirst: (String) -> Unit,
-    onNavigateToSubSecond: (String) -> Unit,
-    onNavigateToSubThird: (String) -> Unit,
-    onNavigateToSubFourth: (String) -> Unit,
+    onNavigationAction: (NavigationAction) -> Unit
 ) {
     val items = listOf(
         Triple("search", Icons.Default.Search, "검색"),

@@ -6,24 +6,36 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.hkjj.heartbreakprice.data.repository.AuthRepositoryImpl
 import com.hkjj.heartbreakprice.presentation.screen.main.MainRoot
 import com.hkjj.heartbreakprice.presentation.screen.signin.SignInRoot
 import com.hkjj.heartbreakprice.presentation.screen.signup.SignUpRoot
-import org.koin.compose.koinInject
+import kotlinx.coroutines.flow.collectLatest
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun NavigationRoot(
     navController: NavHostController = rememberNavController(),
-    authRepository: AuthRepositoryImpl = koinInject<AuthRepositoryImpl>()
+    viewModel: NavigationViewModel = koinViewModel()
 ) {
-    val isSignIn by authRepository.isSignIn.collectAsStateWithLifecycle()
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    LaunchedEffect(Unit) {
+        viewModel.event.collectLatest { event ->
+            when (event) {
+                is NavigationEvent.NavigateTo -> {
+                    navController.navigate(event.route)
+                }
+            }
+        }
+    }
 
     NavHost(
         navController = navController,
@@ -32,8 +44,8 @@ fun NavigationRoot(
     ) {
 
         composable<Route.Entry> {
-            LaunchedEffect(isSignIn) {
-                val target: Route = if (isSignIn) {
+            LaunchedEffect(uiState.isSignIn) {
+                val target: Route = if (uiState.isSignIn) {
                     Route.Main
                 } else {
                     Route.SignIn
@@ -49,8 +61,7 @@ fun NavigationRoot(
         /* ===================== */
         composable<Route.SignIn> {
             SignInRoot(
-                onNavigateSignUp = { navController.navigate(Route.SignUp) },
-                onNavigateToMain = { navController.navigate(Route.Main) },
+                onNavigationAction = viewModel::onAction
             )
         }
         composable<Route.SignUp> {
@@ -62,13 +73,7 @@ fun NavigationRoot(
         /* ===================== */
         composable<Route.Main> {
             MainRoot(
-                onNavigateToSubFirst = {
-                    /* 상세 화면 넘어갈때 사용하는 콜백 */
-                    //navController.navigate(Route.Detail(it))
-                },
-                onNavigateToSubSecond = {  },
-                onNavigateToSubThird = {  },
-                onNavigateToSubFourth = {  },
+                onNavigationAction = viewModel::onAction
             )
         }
         composable<Route.Detail> { backStackEntry ->
