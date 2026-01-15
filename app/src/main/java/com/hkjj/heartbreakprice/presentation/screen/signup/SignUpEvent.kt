@@ -1,4 +1,5 @@
 package com.hkjj.heartbreakprice.presentation.screen.signup
 
-class SignUpEvent {
+sealed interface SignUpEvent {
+    data object NavigateToLogin : SignUpEvent
 }
