@@ -6,9 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -32,6 +30,9 @@ fun NavigationRoot(
             when (event) {
                 is NavigationEvent.NavigateTo -> {
                     navController.navigate(event.route)
+                }
+                is NavigationEvent.NavigateBack -> {
+                    navController.popBackStack()
                 }
             }
         }
@@ -65,7 +66,9 @@ fun NavigationRoot(
             )
         }
         composable<Route.SignUp> {
-            SignUpRoot()
+            SignUpRoot(
+                onNavigationAction = viewModel::onAction
+            )
         }
 
         /* ===================== */

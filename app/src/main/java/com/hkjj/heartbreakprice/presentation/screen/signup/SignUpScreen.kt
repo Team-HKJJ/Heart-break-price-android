@@ -1,6 +1,5 @@
 package com.hkjj.heartbreakprice.presentation.screen.signup
 
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,11 +9,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Email
@@ -32,11 +35,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -45,23 +43,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
-fun SignupScreen(
-    onSignup: (String, String, String) -> Boolean,
-    onNavigateToLogin: () -> Unit
+fun SignUpScreen(
+    state: SignUpUiState,
+    onAction: (SignUpAction) -> Unit
 ) {
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
-    var success by remember { mutableStateOf(false) }
-    var isLoading by remember { mutableStateOf(false) }
-
-    val scope = rememberCoroutineScope()
+    val scrollState = rememberScrollState()
 
     Box(
         modifier = Modifier
@@ -70,13 +58,16 @@ fun SignupScreen(
                 brush = Brush.linearGradient(
                     colors = listOf(Color(0xFFEFF6FF), Color(0xFFE0E7FF))
                 )
-            ),
+            )
+            .systemBarsPadding()
+            .imePadding(),
         contentAlignment = Alignment.Center
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
+                .verticalScroll(scrollState)
                 .padding(16.dp)
         ) {
             // Logo
@@ -123,7 +114,7 @@ fun SignupScreen(
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
-                    if (error.isNotEmpty()) {
+                    if (state.errorMessage.isNotEmpty()) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -134,11 +125,11 @@ fun SignupScreen(
                         ) {
                             Icon(Icons.Default.Warning, contentDescription = null, tint = Color(0xFFDC2626), modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text(error, color = Color(0xFFB91C1C), style = MaterialTheme.typography.bodySmall)
+                            Text(state.errorMessage, color = Color(0xFFB91C1C), style = MaterialTheme.typography.bodySmall)
                         }
                     }
 
-                    if (success) {
+                    if (state.isSuccess) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -156,13 +147,13 @@ fun SignupScreen(
                     // Name
                     Text("이름", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
-                        value = name,
-                        onValueChange = { name = it },
+                        value = state.name,
+                        onValueChange = { onAction(SignUpAction.OnNameChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Color.Gray) },
                         placeholder = { Text("홍길동") },
                         singleLine = true,
-                        enabled = !isLoading && !success
+                        enabled = !state.isLoading && !state.isSuccess
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -170,13 +161,13 @@ fun SignupScreen(
                     // Email
                     Text("이메일", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
+                        value = state.email,
+                        onValueChange = { onAction(SignUpAction.OnEmailChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Color.Gray) },
                         placeholder = { Text("example@email.com") },
                         singleLine = true,
-                        enabled = !isLoading && !success
+                        enabled = !state.isLoading && !state.isSuccess
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -184,15 +175,15 @@ fun SignupScreen(
                     // Password
                     Text("비밀번호", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
+                        value = state.password,
+                        onValueChange = { onAction(SignUpAction.OnPasswordChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Gray) },
                         placeholder = { Text("••••••••") },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
-                        enabled = !isLoading && !success
+                        enabled = !state.isLoading && !state.isSuccess
                     )
                     Text("최소 6자 이상", style = MaterialTheme.typography.bodySmall, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
 
@@ -201,58 +192,27 @@ fun SignupScreen(
                     // Confirm Password
                     Text("비밀번호 확인", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
-                        value = confirmPassword,
-                        onValueChange = { confirmPassword = it },
+                        value = state.confirmPassword,
+                        onValueChange = { onAction(SignUpAction.OnConfirmPasswordChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Gray) },
                         placeholder = { Text("••••••••") },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
-                        enabled = !isLoading && !success
+                        enabled = !state.isLoading && !state.isSuccess
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
-                        onClick = {
-                            if (name.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
-                                error = "모든 필드를 입력해주세요."
-                                return@Button
-                            }
-                            if (password.length < 6) {
-                                error = "비밀번호는 최소 6자 이상이어야 합니다."
-                                return@Button
-                            }
-                            if (password != confirmPassword) {
-                                error = "비밀번호가 일치하지 않습니다."
-                                return@Button
-                            }
-                            if (!email.contains('@')) {
-                                error = "올바른 이메일 형식을 입력해주세요."
-                                return@Button
-                            }
-
-                            isLoading = true
-                            error = ""
-                            scope.launch {
-                                delay(500)
-                                if (onSignup(name, email, password)) {
-                                    success = true
-                                    delay(1500)
-                                    onNavigateToLogin()
-                                } else {
-                                    error = "이미 가입된 이메일입니다."
-                                }
-                                isLoading = false
-                            }
-                        },
+                        onClick = { onAction(SignUpAction.OnSignUpClick) },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !isLoading && !success,
+                        enabled = !state.isLoading && !state.isSuccess,
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
                     ) {
-                        Text(if (isLoading) "가입 중..." else if (success) "완료!" else "회원가입")
+                        Text(if (state.isLoading) "가입 중..." else if (state.isSuccess) "완료!" else "회원가입")
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -263,7 +223,7 @@ fun SignupScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text("이미 계정이 있으신가요?", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
-                        TextButton(onClick = onNavigateToLogin, enabled = !isLoading && !success) {
+                        TextButton(onClick = { onAction(SignUpAction.OnLoginClick) }, enabled = !state.isLoading && !state.isSuccess) {
                             Text("로그인", color = Color(0xFF2563EB))
                         }
                     }

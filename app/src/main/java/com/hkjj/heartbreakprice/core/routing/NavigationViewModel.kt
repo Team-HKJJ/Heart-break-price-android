@@ -36,6 +36,9 @@ class NavigationViewModel(
                 is NavigationAction.NavigateToDetail -> {
                     _event.send(NavigationEvent.NavigateTo(Route.Detail(action.id)))
                 }
+                is NavigationAction.NavigateBack -> {
+                    _event.send(NavigationEvent.NavigateBack)
+                }
             }
         }
     }
