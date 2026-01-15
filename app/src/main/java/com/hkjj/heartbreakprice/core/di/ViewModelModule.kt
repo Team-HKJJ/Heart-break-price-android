@@ -1,10 +1,23 @@
 package com.hkjj.heartbreakprice.core.di
 
+import com.hkjj.heartbreakprice.core.routing.NavigationViewModel
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchViewModel
+import com.hkjj.heartbreakprice.presentation.screen.signin.SignInViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val viewModelModule = module {
+    viewModel {
+        NavigationViewModel(
+            authRepository = get()
+        )
+    }
+
+    viewModel {
+        SignInViewModel(
+            authRepository = get()
+        )
+    }
 
     viewModel {
         SearchViewModel(

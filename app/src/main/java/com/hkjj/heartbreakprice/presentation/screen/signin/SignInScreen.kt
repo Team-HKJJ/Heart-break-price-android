@@ -30,11 +30,6 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -43,23 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 @Composable
 fun SignInScreen(
-    onLogin: (String, String) -> Boolean,
-    onNavigateToSignup: () -> Unit,
-    onNavigateToMain: () -> Unit,
+    state: SignInUiState,
+    onAction: (SignInAction) -> Unit
 ) {
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
-    var isLoading by remember { mutableStateOf(false) }
-
-    val scope = rememberCoroutineScope()
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -121,7 +105,7 @@ fun SignInScreen(
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
-                    if (error.isNotEmpty()) {
+                    if (state.errorMessage.isNotEmpty()) {
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -138,7 +122,7 @@ fun SignInScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                error,
+                                state.errorMessage,
                                 color = Color(0xFFB91C1C),
                                 style = MaterialTheme.typography.bodySmall
                             )
@@ -152,8 +136,8 @@ fun SignInScreen(
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                     OutlinedTextField(
-                        value = email,
-                        onValueChange = { email = it },
+                        value = state.email,
+                        onValueChange = { onAction(SignInAction.OnEmailChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = {
                             Icon(
@@ -164,7 +148,7 @@ fun SignInScreen(
                         },
                         placeholder = { Text("example@email.com") },
                         singleLine = true,
-                        enabled = !isLoading
+                        enabled = !state.isLoading
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -176,8 +160,8 @@ fun SignInScreen(
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
                     OutlinedTextField(
-                        value = password,
-                        onValueChange = { password = it },
+                        value = state.password,
+                        onValueChange = { onAction(SignInAction.OnPasswordChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = {
                             Icon(
@@ -190,37 +174,19 @@ fun SignInScreen(
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
-                        enabled = !isLoading
+                        enabled = !state.isLoading
                     )
 
                     Spacer(modifier = Modifier.height(24.dp))
 
                     Button(
-                        onClick = {
-                            if (email.isEmpty() || password.isEmpty()) {
-                                error = "이메일과 비밀번호를 입력해주세요."
-                                return@Button
-                            }
-                            isLoading = true
-                            error = ""
-                            scope.launch {
-                                delay(500) // Simulate network
-                                if (onLogin(email, password)) {
-                                    onNavigateToMain()
-                                    isLoading = false
-                                    error = ""
-                                } else {
-                                    error = "이메일 또는 비밀번호가 올바르지 않습니다."
-                                    isLoading = false
-                                }
-                            }
-                        },
+                        onClick = { onAction(SignInAction.OnLoginClick) },
                         modifier = Modifier.fillMaxWidth(),
-                        enabled = !isLoading,
+                        enabled = !state.isLoading,
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
                     ) {
-                        Text(if (isLoading) "로그인 중..." else "로그인")
+                        Text(if (state.isLoading) "로그인 중..." else "로그인")
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -235,7 +201,7 @@ fun SignInScreen(
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray
                         )
-                        TextButton(onClick = onNavigateToSignup) {
+                        TextButton(onClick = { onAction(SignInAction.OnSignUpClick) }) {
                             Text("회원가입", color = Color(0xFF2563EB))
                         }
                     }
@@ -248,7 +214,7 @@ fun SignInScreen(
                                 1.dp,
                                 Color.LightGray,
                                 RoundedCornerShape(8.dp)
-                            ) // border removed for simplicity or replaced with divider logic
+                            )
                             .background(Color(0xFFF9FAFB), RoundedCornerShape(8.dp))
                             .padding(16.dp)
                     ) {
