@@ -8,7 +8,7 @@ class MockProductDataSourceImpl : ProductDataSource {
         return mockProducts
     }
 
-    private val mockProducts = listOf(
+    val mockProducts = listOf(
         Product(
             id = "1",
             name = "갤럭시 S24 울트라 256GB",
