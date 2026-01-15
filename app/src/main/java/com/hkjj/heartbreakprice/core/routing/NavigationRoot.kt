@@ -14,6 +14,7 @@ import androidx.navigation.compose.rememberNavController
 import com.hkjj.heartbreakprice.data.repository.AuthRepositoryImpl
 import com.hkjj.heartbreakprice.presentation.screen.main.MainRoot
 import com.hkjj.heartbreakprice.presentation.screen.signin.SignInRoot
+import com.hkjj.heartbreakprice.presentation.screen.signup.SignUpRoot
 import org.koin.compose.koinInject
 
 @Composable
@@ -46,9 +47,11 @@ fun NavigationRoot(
         /* ===== AUTH FLOW ===== */
         /* ===================== */
         composable("sign_in") {
-            SignInRoot()
+            SignInRoot(onNavigateSignUp = { navController.navigate("sign_up") })
         }
-        composable("sign_up") { /* 기존 코드 */ }
+        composable("sign_up") {
+            SignUpRoot()
+        }
 
         /* ===================== */
         /* ===== MAIN FLOW ===== */
