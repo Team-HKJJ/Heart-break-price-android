@@ -10,8 +10,7 @@ fun WishRoot(viewModel: WishViewModel = koinViewModel() ) {
 
     WishScreen(
         state = state.value,
-        onRemove = {},
-        onUpdateTargetPrice ={_,_->},
+        onAction = viewModel::onAction
     )
 
 }

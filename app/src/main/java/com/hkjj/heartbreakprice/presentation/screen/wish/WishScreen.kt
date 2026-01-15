@@ -23,15 +23,25 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.hkjj.heartbreakprice.presentation.component.TargetPriceDialog
 import com.hkjj.heartbreakprice.presentation.component.WishCard
 
 @Composable
 fun WishScreen(
     state: WishUiState,
-    onRemove: (String) -> Unit,
-    onUpdateTargetPrice: (String, Int) -> Unit,
-    modifier: Modifier = Modifier
+    onAction: (WishAction) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
+    if (state.isDialogShow) {
+        val wishProduct = state.wishProducts.first { it.id == state.targetId }
+
+        TargetPriceDialog(
+            wishProduct = wishProduct,
+            onDismiss = { onAction(WishAction.OnHideDialog) },
+            onSave = { onAction(WishAction.OnTargetPriceChange(wishProduct.id, it)) }
+        )
+    }
+
     if (state.wishProducts.isEmpty()) {
         Column(
             modifier = modifier
@@ -73,16 +83,18 @@ fun WishScreen(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
             ) {
                 items(state.wishProducts) { product ->
-
                     WishCard(
                         wishProduct = product,
-                        onRemove = { onRemove(product.id) },
-                        targetPriceText =if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
-                        targetPriceColor = if (product.price <= product.targetPrice) Color(
-                            0xFF22C55E
-                        ) else Color(0xFF3B82F6),
-                        onTargetPriceButtonClick = {}
-                        //price -> onUpdateTargetPrice(product.id, price)
+                        onRemove = {
+                            onAction(WishAction.OnDeleteClick(product.id))
+                        },
+                        targetPriceText = if (product.price <= product.targetPrice) "추적중" else "목표가 도달",
+                        targetPriceColor = if (product.price <= product.targetPrice) {
+                            Color(0xFF3B82F6)
+                        } else {
+                            Color(0xFF22C55E)
+                        },
+                        onTargetPriceButtonClick = { onAction(WishAction.OnShowDialog(product.id)) }
                     )
                 }
             }
@@ -95,8 +107,6 @@ fun WishScreen(
 private fun WishScreenPreview() {
     WishScreen(
         state = WishUiState(),
-        onRemove = {},
-        onUpdateTargetPrice = {_,_ ->},
+        onAction = {},
     )
-
 }

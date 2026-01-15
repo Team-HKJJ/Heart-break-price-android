@@ -1,6 +1,7 @@
 package com.hkjj.heartbreakprice.presentation.screen.wish
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,15 @@ class WishViewModel(
         getWishes()
     }
 
+    fun onAction(action: WishAction) {
+        when (action) {
+            WishAction.OnHideDialog -> hideDialog()
+            is WishAction.OnShowDialog -> showDialog(action.id)
+            is WishAction.OnTargetPriceChange -> updateTargetPrice(action.id, action.targetPrice)
+            is WishAction.OnDeleteClick -> deleteWish(action.id)
+        }
+    }
+
     @RequiresApi(Build.VERSION_CODES.O)
     fun addWish(product: Product) {
         val newWish = WishProduct(
@@ -52,7 +62,7 @@ class WishViewModel(
         }
     }
 
-    fun deleteWish(id: String) {
+    private fun deleteWish(id: String) {
         _uiState.update {
             it.copy(wishProducts = it.wishProducts.filter { item -> item.id != id })
         }
@@ -61,7 +71,7 @@ class WishViewModel(
         }
     }
 
-    fun getWishes() {
+    private fun getWishes() {
         viewModelScope.launch {
             when (val result = getWishesUseCase.invoke()) {
                 is Result.Error -> {
@@ -78,9 +88,37 @@ class WishViewModel(
             }
         }
     }
-    fun showDialog(){
+
+    private fun updateTargetPrice(id: String, targetPrice: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                wishProducts = currentState.wishProducts.map { product ->
+                    if (product.id == id) {
+                        product.copy(targetPrice = targetPrice)
+                    } else {
+                        product
+                    }
+                },
+                isDialogShow = false
+            )
+        }
+    }
+
+    private fun showDialog(id: String) {
         _uiState.update {
-            it.copy(isDialogShow = true)
+            it.copy(
+                isDialogShow = true,
+                targetId = id
+            )
+        }
+    }
+
+    private fun hideDialog() {
+        _uiState.update {
+            it.copy(
+                isDialogShow = false,
+                targetId = null
+            )
         }
     }
 }
