@@ -2,8 +2,11 @@ package com.hkjj.heartbreakprice.core.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.Date
+import java.util.Locale
 
 object TimeUtil {
 
@@ -15,5 +18,20 @@ object TimeUtil {
         val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss")
 
         return current.format(formatter)
+    }
+
+    fun formatTimeAgo(date: Date): String {
+        val now = Date()
+        val diff = now.time - date.time
+        val minutes = diff / 60000
+        val hours = diff / 3600000
+        val days = diff / 86400000
+        return when {
+            minutes < 1 -> "방금 전"
+            minutes < 60 -> "${minutes}분 전"
+            hours < 24 -> "${hours}시간 전"
+            days < 7 -> "${days}일 전"
+            else -> SimpleDateFormat("MM.dd", Locale.getDefault()).format(date)
+        }
     }
 }
