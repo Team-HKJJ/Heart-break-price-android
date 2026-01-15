@@ -42,7 +42,7 @@ fun MainRoot(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "가격 추적 쇼핑",
+                        "심쿵가",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )

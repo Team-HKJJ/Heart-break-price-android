@@ -14,17 +14,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.presentation.component.EmptyNotificationItem
 import com.hkjj.heartbreakprice.presentation.component.NotificationItem
 
 @Composable
 fun NotificationScreen(
-    notifications: List<Notification>,
-    onMarkAsRead: (String) -> Unit,
-    onMarkAllAsRead: () -> Unit,
-    onDelete: (String) -> Unit
+    uiState: NotificationUiState,
+    onAction: (NotificationAction) -> Unit
 ) {
+    val notifications = uiState.notifications
     val unreadCount = notifications.count { !it.isRead }
 
     Column(
@@ -55,7 +53,7 @@ fun NotificationScreen(
             }
             if (notifications.isNotEmpty() && unreadCount > 0) {
                 OutlinedButton(
-                    onClick = onMarkAllAsRead,
+                    onClick = { onAction(NotificationAction.MarkAllAsRead) },
                     colors = ButtonDefaults.outlinedButtonColors(contentColor = Color(0xFF2563EB)),
                     border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(Color(0xFF2563EB)))
                 ) {
@@ -75,8 +73,8 @@ fun NotificationScreen(
                 items(notifications, key = { it.id }) { notification ->
                     NotificationItem(
                         notification = notification,
-                        onMarkAsRead = onMarkAsRead,
-                        onDelete = onDelete
+                        onMarkAsRead = { onAction(NotificationAction.MarkAsRead(it)) },
+                        onDelete = { onAction(NotificationAction.DeleteNotification(it)) }
                     )
                 }
             }

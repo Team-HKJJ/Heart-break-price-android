@@ -146,7 +146,7 @@ fun NotificationItem(
                         Spacer(modifier = Modifier.width(8.dp))
                         Badge(containerColor = Color(0xFFEF4444)) {
                             val discount = ((1.0 - notification.newPrice.toDouble() / notification.oldPrice) * 100).toInt()
-                            Text("$discount% 할인", color = Color.White)
+                            Text("$discount% 할인", color = Color.White, maxLines = 1)
                         }
                     }
                 }
