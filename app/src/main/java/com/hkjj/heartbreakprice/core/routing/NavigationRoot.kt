@@ -48,7 +48,10 @@ fun NavigationRoot(
         /* ===== AUTH FLOW ===== */
         /* ===================== */
         composable<Route.SignIn> {
-            SignInRoot(onNavigateSignUp = { navController.navigate(Route.SignUp) })
+            SignInRoot(
+                onNavigateSignUp = { navController.navigate(Route.SignUp) },
+                onNavigateToMain = { navController.navigate(Route.Main) },
+            )
         }
         composable<Route.SignUp> {
             SignUpRoot()

@@ -1,19 +1,15 @@
 package com.hkjj.heartbreakprice.presentation.screen.signin
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 
 @Composable
-fun SignInRoot(onNavigateSignUp: () -> Unit) {
-    Column {
-        Text("SignIn")
-        Button(onClick = {}) {
-            Text("SignIn")
-        }
-        Button(onClick = onNavigateSignUp) {
-            Text("SignUp")
-        }
-    }
+fun SignInRoot(
+    onNavigateSignUp: () -> Unit,
+    onNavigateToMain: () -> Unit,
+) {
+    SignInScreen(
+        onLogin = { email, password -> email == "demo@example.com" && password == "demo1234" },
+        onNavigateToSignup = { onNavigateSignUp() },
+        onNavigateToMain = { onNavigateToMain() },
+    )
 }
