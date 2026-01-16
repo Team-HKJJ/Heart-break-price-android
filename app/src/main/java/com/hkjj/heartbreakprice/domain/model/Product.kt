@@ -7,5 +7,7 @@ data class Product (
     val originalPrice: Int? = null,
     val image: String,
     val category: String,
-    val shop: String
+    val shop: String,
+    val url: String
+
 )

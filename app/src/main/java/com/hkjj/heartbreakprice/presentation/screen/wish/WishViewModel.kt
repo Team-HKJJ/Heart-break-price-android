@@ -50,7 +50,8 @@ class WishViewModel(
             category = product.category,
             shop = product.shop,
             targetPrice = product.price,
-            addedDate = TimeUtil.generateTime()
+            addedDate = TimeUtil.generateTime(),
+            url=""
         )
         _uiState.update {
             it.copy(

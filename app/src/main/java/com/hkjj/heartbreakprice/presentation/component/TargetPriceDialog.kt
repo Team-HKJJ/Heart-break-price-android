@@ -107,7 +107,8 @@ private fun TargetPriceDialogPreview() {
         category = "카메라",
         shop = "G마켓",
         targetPrice = 1000000,
-        addedDate = "2026-01-14T14:45:20"
+        addedDate = "2026-01-14T14:45:20",
+        url=""
     )
 
     TargetPriceDialog(

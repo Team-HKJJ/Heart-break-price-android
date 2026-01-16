@@ -15,7 +15,8 @@ class MockWishRepositoryImpl : WishRepository {
             category = "스마트폰",
             shop = "G마켓",
             targetPrice = 1000000,
-            addedDate = "2026-01-14T14:45:20"
+            addedDate = "2026-01-14T14:45:20",
+            url = ""
         ),
         WishProduct(
             id = "2",
@@ -26,7 +27,8 @@ class MockWishRepositoryImpl : WishRepository {
             category = "노트북",
             shop = "쿠팡",
             targetPrice = 1000000,
-            addedDate = "2026-01-14T14:45:20"
+            addedDate = "2026-01-14T14:45:20",
+            url=""
         ),
         WishProduct(
             id = "3",
@@ -37,7 +39,8 @@ class MockWishRepositoryImpl : WishRepository {
             category = "헤드폰",
             shop = "11번가",
             targetPrice = 1000000,
-            addedDate = "2026-01-14T14:45:20"
+            addedDate = "2026-01-14T14:45:20",
+            url=""
         ),
         WishProduct(
             id = "4",
@@ -48,7 +51,8 @@ class MockWishRepositoryImpl : WishRepository {
             category = "스마트워치",
             shop = "네이버쇼핑",
             targetPrice = 1000000,
-            addedDate = "2026-01-14T14:45:20"
+            addedDate = "2026-01-14T14:45:20",
+            url=""
         ),
         WishProduct(
             id = "5",
@@ -59,7 +63,8 @@ class MockWishRepositoryImpl : WishRepository {
             category = "카메라",
             shop = "G마켓",
             targetPrice = 1000000,
-            addedDate = "2026-01-14T14:45:20"
+            addedDate = "2026-01-14T14:45:20",
+            url=""
         )
     )
 
