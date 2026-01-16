@@ -16,7 +16,8 @@ class AuthRepositoryImpl : AuthRepository {
     override suspend fun getUser(): User {
         return User(
             name = "MisterJerry",
-            email = "misterjerry@example.com"
+            email = "misterjerry@example.com",
+            fcmToken = "test"
         )
     }
 }
