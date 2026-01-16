@@ -11,6 +11,8 @@ plugins {
     //firebase
     id("com.google.gms.google-services")
 
+    // Secrets Gradle Plugin for Android
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
