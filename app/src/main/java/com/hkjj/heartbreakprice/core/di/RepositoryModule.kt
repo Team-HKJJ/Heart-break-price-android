@@ -2,7 +2,9 @@ package com.hkjj.heartbreakprice.core.di
 
 import com.hkjj.heartbreakprice.data.repository.AuthRepositoryImpl
 import com.hkjj.heartbreakprice.data.repository.MockWishRepositoryImpl
+import com.hkjj.heartbreakprice.data.repository.NotificationHistoryRepositoryImpl
 import com.hkjj.heartbreakprice.data.repository.ProductRepositoryImpl
+import com.hkjj.heartbreakprice.domain.repository.NotificationHistoryRepository
 import com.hkjj.heartbreakprice.domain.repository.AuthRepository
 import com.hkjj.heartbreakprice.domain.repository.ProductRepository
 import com.hkjj.heartbreakprice.domain.repository.WishRepository
@@ -17,5 +19,8 @@ val repositoryModule = module {
     }
     single<AuthRepository> {
         AuthRepositoryImpl()
+    }
+    single<NotificationHistoryRepository> {
+        NotificationHistoryRepositoryImpl(get())
     }
 }

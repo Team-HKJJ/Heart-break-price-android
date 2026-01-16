@@ -19,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.hkjj.heartbreakprice.core.routing.NavigationAction
+import com.hkjj.heartbreakprice.presentation.screen.notification.NotificationRoot
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
 import com.hkjj.heartbreakprice.presentation.screen.setting.SettingRoot
 import com.hkjj.heartbreakprice.presentation.screen.wish.WishRoot
@@ -42,7 +43,7 @@ fun MainRoot(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "가격 추적 쇼핑",
+                        "심쿵가",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -84,7 +85,7 @@ fun MainRoot(
         ) {
             composable("search") { SearchRoot() }
             composable("wish") { WishRoot() }
-            composable("notification") { Text("Notification") }
+            composable("notification") { NotificationRoot() }
             composable("settings") { SettingRoot(onLogout = { }) }
         }
     }
