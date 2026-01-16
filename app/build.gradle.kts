@@ -49,6 +49,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     flavorDimensions += listOf("version")
     productFlavors {
@@ -99,6 +100,7 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.retrofit.converter.scalars)
 
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)

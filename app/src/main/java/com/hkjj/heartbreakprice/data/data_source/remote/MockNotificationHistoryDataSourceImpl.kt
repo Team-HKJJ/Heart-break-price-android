@@ -1,5 +1,6 @@
-package com.hkjj.heartbreakprice.data.data_source
+package com.hkjj.heartbreakprice.data.data_source.remote
 
+import com.hkjj.heartbreakprice.data.data_source.NotificationHistoryDataSource
 import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.domain.model.NotificationType
 import java.util.Date
