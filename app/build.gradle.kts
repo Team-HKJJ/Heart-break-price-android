@@ -7,6 +7,10 @@ plugins {
 
     // Kotlin Serialization
     alias(libs.plugins.kotlin.serialization)
+
+    //firebase
+    id("com.google.gms.google-services")
+
 }
 
 android {
@@ -101,4 +105,10 @@ dependencies {
 
     // Mockk
     testImplementation(libs.mockk)
+
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
 }
