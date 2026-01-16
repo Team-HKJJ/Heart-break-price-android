@@ -1,4 +1,4 @@
-package com.hkjj.heartbreakprice.data.data_source.remote
+package com.hkjj.heartbreakprice.data.data_source.local
 
 import com.hkjj.heartbreakprice.data.data_source.NotificationHistoryDataSource
 import com.hkjj.heartbreakprice.domain.model.Notification

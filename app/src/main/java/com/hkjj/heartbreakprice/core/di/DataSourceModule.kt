@@ -1,11 +1,11 @@
 package com.hkjj.heartbreakprice.core.di
 
 import com.hkjj.heartbreakprice.BuildConfig
-import com.hkjj.heartbreakprice.data.data_source.remote.MockNotificationHistoryDataSourceImpl
-import com.hkjj.heartbreakprice.data.data_source.remote.MockProductDataSourceImpl
+import com.hkjj.heartbreakprice.data.data_source.local.MockNotificationHistoryDataSourceImpl
+import com.hkjj.heartbreakprice.data.data_source.local.MockProductDataSourceImpl
 import com.hkjj.heartbreakprice.data.data_source.NotificationHistoryDataSource
 import com.hkjj.heartbreakprice.data.data_source.ProductDataSource
-import com.hkjj.heartbreakprice.data.data_source.local.RemoteProductDataSourceImpl
+import com.hkjj.heartbreakprice.data.data_source.remote.RemoteProductDataSourceImpl
 import com.hkjj.heartbreakprice.data.data_source.remote.api.NaverShoppingApi
 import org.koin.dsl.module
 import retrofit2.Retrofit
