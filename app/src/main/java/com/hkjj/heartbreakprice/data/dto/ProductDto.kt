@@ -1,5 +1,8 @@
 package com.hkjj.heartbreakprice.data.dto
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class ProductDto(
     val productId: String,
     val title: String,
