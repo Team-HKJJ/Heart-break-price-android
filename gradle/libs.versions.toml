@@ -53,6 +53,7 @@ coilCompose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" 
 kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
 retrofit-converter-kotlinx-serialization = { module = "com.squareup.retrofit2:converter-kotlinx-serialization", version.ref = "retrofit" }
+retrofit-converter-scalars = { module = "com.squareup.retrofit2:converter-scalars", version.ref = "retrofit" }
 # Mockk
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 
