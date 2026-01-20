@@ -5,6 +5,7 @@ import com.hkjj.heartbreakprice.data.data_source.local.MockNotificationHistoryDa
 import com.hkjj.heartbreakprice.data.data_source.local.MockProductDataSourceImpl
 import com.hkjj.heartbreakprice.data.data_source.NotificationHistoryDataSource
 import com.hkjj.heartbreakprice.data.data_source.ProductDataSource
+import com.hkjj.heartbreakprice.data.data_source.remote.RemoteNotificationHistoryDataSourceImpl
 import com.hkjj.heartbreakprice.data.data_source.remote.RemoteProductDataSourceImpl
 import com.hkjj.heartbreakprice.data.data_source.remote.api.NaverShoppingApi
 import kotlinx.serialization.json.Json
@@ -15,11 +16,8 @@ import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 
 val datasourceModule = module {
-    single<NotificationHistoryDataSource> {
-        MockNotificationHistoryDataSourceImpl()
-    }
-
     if (BuildConfig.FLAVOR == "prod") {
+        single<NotificationHistoryDataSource> { RemoteNotificationHistoryDataSourceImpl() }
         single {
             val json = Json {
                 ignoreUnknownKeys = true // DTO에 정의되지 않은 필드는 무시
@@ -35,6 +33,7 @@ val datasourceModule = module {
         }
         single<ProductDataSource> { RemoteProductDataSourceImpl(get()) }
     } else {
+        single<NotificationHistoryDataSource> { MockNotificationHistoryDataSourceImpl() }
         single<ProductDataSource> { MockProductDataSourceImpl() }
     }
 }
