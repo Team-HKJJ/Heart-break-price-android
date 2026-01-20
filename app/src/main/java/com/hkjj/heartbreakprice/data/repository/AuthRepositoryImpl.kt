@@ -51,6 +51,10 @@ class AuthRepositoryImpl : AuthRepository {
         }
     }
 
+    override suspend fun signIn() {
+        _isSignIn.value = true
+    }
+
     override suspend fun logout() {
         auth.signOut()
     }
@@ -64,4 +68,11 @@ class AuthRepositoryImpl : AuthRepository {
             fcmToken = snapshot.getString("fcmToken") ?: ""
         )
     }
+
+    override suspend fun updateFcmToken(token: String) {
+        // TODO firestore Token Update
+        return Unit
+    }
 }
+
+

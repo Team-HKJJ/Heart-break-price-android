@@ -2,7 +2,6 @@ package com.hkjj.heartbreakprice.presentation.screen.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hkjj.heartbreakprice.data.data_source.MockProductDataSourceImpl
 import com.hkjj.heartbreakprice.domain.usecase.GetSearchedProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
