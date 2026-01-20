@@ -10,7 +10,8 @@ fun ProductDto.toDomain(): Product {
         price = lprice?.filter { it.isDigit() }?.toIntOrNull() ?: 0,
         originalPrice = hprice?.filter { it.isDigit() }?.toIntOrNull(),
         image = image ?: "",
-        category = category3 ?: "", // 소분류를 기본 카테고리로 사용
+        category = category3 ?: "",
+        brand = brand ?: "",
         shop = mallName ?: "",
         url = link ?: ""
     )

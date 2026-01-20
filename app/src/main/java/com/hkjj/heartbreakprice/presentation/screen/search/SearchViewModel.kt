@@ -25,6 +25,7 @@ class SearchViewModel(
             val result = getSearchedProductUseCase("")
             if (result is Result.Success) {
                 allProducts = result.data
+                updateCategories()
                 updateFilteredProducts()
             }
         }
@@ -61,18 +62,30 @@ class SearchViewModel(
                     val result = getSearchedProductUseCase(query)
                     if (result is Result.Success) {
                         allProducts = result.data
+                        updateCategories()
                         updateFilteredProducts()
                     }
                 }
         }
     }
 
+    private fun updateCategories() {
+        val uniqueCategories = allProducts.map { it.brand }.distinct().filter { it.isNotBlank() }
+        val hasEmptyBrand = allProducts.any { it.brand.isBlank() }
+        val finalCategories = if (hasEmptyBrand) {
+            listOf("전체") + uniqueCategories + "기타"
+        } else {
+            listOf("전체") + uniqueCategories
+        }
+        _uiState.value = _uiState.value.copy(categories = finalCategories)
+    }
+
     private fun updateFilteredProducts() {
         val selectedCategory = _uiState.value.selectedCategory
-        val filtered = if (selectedCategory == "전체") {
-            allProducts
-        } else {
-            allProducts.filter { it.category == selectedCategory }
+        val filtered = when (selectedCategory) {
+            "전체" -> allProducts
+            "기타" -> allProducts.filter { it.brand.isBlank() }
+            else -> allProducts.filter { it.brand == selectedCategory }
         }
         _uiState.value = _uiState.value.copy(filteredProducts = filtered)
     }

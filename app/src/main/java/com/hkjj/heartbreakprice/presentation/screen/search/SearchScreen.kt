@@ -31,8 +31,6 @@ fun SearchScreen(
     onSearchAction: (SearchAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val categories = listOf("전체", "스마트폰", "노트북", "헤드폰", "스마트워치", "카메라", "태블릿")
-
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -70,7 +68,7 @@ fun SearchScreen(
                 .padding(bottom = 24.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            items(categories) { category ->
+            items(uiState.categories) { category ->
                 val isSelected = uiState.selectedCategory == category
                 Button(
                     onClick = { onSearchAction(SearchAction.CategoryClick(category)) },
