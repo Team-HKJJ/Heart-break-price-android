@@ -82,12 +82,16 @@ async function fetchProductFromNaver(
  *
  * @param {string} productId 상품 ID
  * @param {string} productName 상품명
+ * @param {string} productImage 상품이미지
+ * @param {number} oldPrice 원가
  * @param {number} currentPrice 현재 가격
  * @return {Promise<void>}
  */
 async function notifyUsersIfNeeded(
   productId: string,
   productName: string,
+  productImage: string,
+  oldPrice: number,
   currentPrice: number
 ): Promise<void> {
   const usersSnapshot = await db.collection("Users").get();
@@ -95,8 +99,6 @@ async function notifyUsersIfNeeded(
   for (const userDoc of usersSnapshot.docs) {
     const user = userDoc.data();
     const fcmToken: string | undefined = user.fcmToken;
-
-    if (!fcmToken) continue;
 
     const wishRef = userDoc.ref
       .collection("wishes")
@@ -107,28 +109,57 @@ async function notifyUsersIfNeeded(
 
     const wish = wishSnap.data();
     const targetPrice: number | undefined = wish?.targetPrice;
+    const targetNotified: boolean = wish?.targetNotified ?? false;
 
+    // 이미 목표가 알림을 보냈다면 스킵
     if (
-      targetPrice !== undefined &&
-      currentPrice <= targetPrice
+      targetPrice === undefined ||
+      currentPrice > targetPrice ||
+      targetNotified
     ) {
+      continue;
+    }
+
+    const message =
+      `${productName} 가격이 목표가에 도달했어요! ` +
+      `${currentPrice.toLocaleString()}원`;
+
+    /** 1️⃣ Firestore notifications 저장 */
+    await userDoc.ref
+      .collection("notifications")
+      .add({
+        type: "TARGET_REACHED",
+        productName,
+        productImage,
+        message,
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        isRead: false,
+        oldPrice,
+        newPrice: currentPrice,
+      });
+
+    /** 2️⃣ FCM 푸시 전송 */
+    if (fcmToken) {
       await admin.messaging().send({
         token: fcmToken,
         notification: {
-          title: "🎉 가격 알림!",
-          body: `${productName} 가격이 ${currentPrice.toLocaleString()}원으로 내려갔어요!`,
+          title: "🎯 목표가 도달!",
+          body: message,
         },
         data: {
+          type: "TARGET_REACHED",
           productId,
-          price: currentPrice.toString(),
+          newPrice: currentPrice.toString(),
         },
       });
-
-      await wishRef.update({
-        price: currentPrice,
-        notifiedAt: admin.firestore.FieldValue.serverTimestamp(),
-      });
     }
+
+    /** 3️⃣ wish 상태 업데이트 (중복 방지) */
+    await wishRef.update({
+      price: currentPrice,
+      targetNotified: true,
+      notifiedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
   }
 }
 
@@ -166,6 +197,8 @@ export const crawlProductPrices = onSchedule(
         await notifyUsersIfNeeded(
           productId,
           productName,
+          product.image,
+          oldPrice,
           newPrice
         );
       }
