@@ -88,11 +88,11 @@ fun WishScreen(
                         onRemove = {
                             onAction(WishAction.OnDeleteClick(product.id))
                         },
-                        targetPriceText = if (product.price <= product.targetPrice) "추적중" else "목표가 도달",
+                        targetPriceText = if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
                         targetPriceColor = if (product.price <= product.targetPrice) {
-                            Color(0xFF3B82F6)
-                        } else {
                             Color(0xFF22C55E)
+                        } else {
+                            Color(0xFF3B82F6)
                         },
                         onTargetPriceButtonClick = { onAction(WishAction.OnShowDialog(product.id)) }
                     )
