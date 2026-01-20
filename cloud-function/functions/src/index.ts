@@ -1,9 +1,10 @@
 import * as admin from "firebase-admin";
+import {getFirestore} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
 import {NAVER_CLIENT_ID, NAVER_CLIENT_SECRET} from "./params";
 
 admin.initializeApp();
-const db = admin.firestore();
+const db = getFirestore("heart-break-price");
 
 /**
  * 네이버 API 인증 정보를 환경 변수에서 가져온다.
@@ -94,40 +95,58 @@ async function notifyUsersIfNeeded(
   oldPrice: number,
   currentPrice: number
 ): Promise<void> {
-  const usersSnapshot = await db.collection("Users").get();
+  // 1. 이 상품을 찜한 유저들의 ID 목록을 가져옴 (UserList 서브컬렉션 조회)
+  const userListSnapshot = await db
+    .collection("Products")
+    .doc(productId)
+    .collection("UserList")
+    .get();
 
-  for (const userDoc of usersSnapshot.docs) {
-    const user = userDoc.data();
-    const fcmToken: string | undefined = user.fcmToken;
+  // 찜한 유저가 없으면 종료
+  if (userListSnapshot.empty) {
+    return;
+  }
 
-    const wishRef = userDoc.ref
-      .collection("wishes")
-      .doc(productId);
+  for (const userListDoc of userListSnapshot.docs) {
+    const userId = userListDoc.id; // UserList 문서 ID가 곧 User ID
 
-    const wishSnap = await wishRef.get();
-    if (!wishSnap.exists) continue;
+    // 2. 해당 유저의 정보와 상세 Wish 설정(목표가 등)을 가져옴
+    const userDocRef = db.collection("Users").doc(userId);
+    const wishDocRef = userDocRef.collection("Wishes").doc(productId);
 
+    // 병렬로 조회하여 성능 향상
+    const [userSnap, wishSnap] = await Promise.all([
+      userDocRef.get(),
+      wishDocRef.get(),
+    ]);
+
+    if (!userSnap.exists || !wishSnap.exists) continue;
+
+    const user = userSnap.data();
     const wish = wishSnap.data();
+
+    const fcmToken: string | undefined = user?.fcmToken;
     const targetPrice: number | undefined = wish?.targetPrice;
     const targetNotified: boolean = wish?.targetNotified ?? false;
 
-    // 이미 목표가 알림을 보냈다면 스킵
-    if (
-      targetPrice === undefined ||
-      currentPrice > targetPrice ||
-      targetNotified
-    ) {
-      continue;
-    }
+    // 가격 업데이트를 위한 데이터 객체 (기본적으로 가격은 무조건 업데이트)
+    const updateData: any = {
+      price: currentPrice,
+    };
 
-    const message =
-      `${productName} 가격이 목표가에 도달했어요! ` +
-      `${currentPrice.toLocaleString()}원`;
+    // 알림 조건 확인
+    const shouldNotify =
+      targetPrice !== undefined &&
+      currentPrice <= targetPrice &&
+      !targetNotified;
 
-    /** 1️⃣ Firestore notifications 저장 */
-    await userDoc.ref
-      .collection("notifications")
-      .add({
+    if (shouldNotify) {
+      const message =
+        `${productName} 가격이 목표가에 도달했어요! ` +
+        `${currentPrice.toLocaleString()}원`;
+
+      /** 1️⃣ Firestore notifications 저장 */
+      await userDocRef.collection("notifications").add({
         type: "TARGET_REACHED",
         productName,
         productImage,
@@ -138,28 +157,33 @@ async function notifyUsersIfNeeded(
         newPrice: currentPrice,
       });
 
-    /** 2️⃣ FCM 푸시 전송 */
-    if (fcmToken) {
-      await admin.messaging().send({
-        token: fcmToken,
-        notification: {
-          title: "🎯 목표가 도달!",
-          body: message,
-        },
-        data: {
-          type: "TARGET_REACHED",
-          productId,
-          newPrice: currentPrice.toString(),
-        },
-      });
+      /** 2️⃣ FCM 푸시 전송 */
+      if (fcmToken) {
+        try {
+          await admin.messaging().send({
+            token: fcmToken,
+            notification: {
+              title: "🎯 목표가 도달!",
+              body: message,
+            },
+            data: {
+              type: "TARGET_REACHED",
+              productId,
+              newPrice: currentPrice.toString(),
+            },
+          });
+        } catch (e) {
+          console.error(`Failed to send FCM to user ${userId}:`, e);
+        }
+      }
+
+      // 알림을 보냈음을 표시
+      updateData.targetNotified = true;
+      updateData.notifiedAt = admin.firestore.FieldValue.serverTimestamp();
     }
 
-    /** 3️⃣ wish 상태 업데이트 (중복 방지) */
-    await wishRef.update({
-      price: currentPrice,
-      targetNotified: true,
-      notifiedAt: admin.firestore.FieldValue.serverTimestamp(),
-    });
+    /** 3️⃣ wish 상태 업데이트 (가격은 항상 업데이트, 알림 상태는 조건부 업데이트) */
+    await wishDocRef.update(updateData);
   }
 }
 
@@ -179,7 +203,7 @@ export const crawlProductPrices = onSchedule(
     for (const productDoc of productsSnapshot.docs) {
       const product = productDoc.data();
 
-      const productId: string = product.id;
+      const productId: string = productDoc.id;
       const productName: string = product.name;
       const oldPrice: number = product.price;
 
