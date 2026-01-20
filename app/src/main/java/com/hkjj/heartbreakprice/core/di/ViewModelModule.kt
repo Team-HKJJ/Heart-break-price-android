@@ -19,7 +19,8 @@ val viewModelModule = module {
 
     viewModel {
         SignInViewModel(
-            authRepository = get()
+            authRepository = get(),
+            updateFcmTokenUseCase = get()
         )
     }
 
