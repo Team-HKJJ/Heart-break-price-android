@@ -1,6 +1,7 @@
 package com.hkjj.heartbreakprice.core.di
 
 import com.hkjj.heartbreakprice.domain.usecase.AddWishUseCase
+import com.hkjj.heartbreakprice.domain.usecase.DeleteFcmTokenUseCase
 import com.hkjj.heartbreakprice.domain.usecase.DeleteWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetNotificationHistoryUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetSearchedProductUseCase
@@ -27,4 +28,5 @@ val usecaseModule = module {
     factory { SignUpUseCase(get()) }
     factory { UpdateFcmTokenUseCase(get(), get()) }
     factory { GetSignInStatusUseCase(get()) }
+    factory { DeleteFcmTokenUseCase(get()) }
 }

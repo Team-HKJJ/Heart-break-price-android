@@ -7,6 +7,7 @@ class DeleteFcmTokenUseCase(
     private val authRepository: AuthRepository
 ) {
     suspend operator fun invoke(): Result<Unit, Exception> {
-        TODO("firestore에 저장된 토큰 삭제 필요")
+        authRepository.updateFcmToken("")
+        return Result.Success(Unit)
     }
 }

@@ -4,8 +4,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hkjj.heartbreakprice.core.Result
 import com.hkjj.heartbreakprice.domain.model.Notification
+import com.hkjj.heartbreakprice.domain.usecase.DeleteFcmTokenUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetNotificationHistoryUseCase
+import com.hkjj.heartbreakprice.domain.usecase.GetUserUseCase
 import com.hkjj.heartbreakprice.domain.usecase.ReadAsMarkNotificationUseCase
+import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -15,7 +18,10 @@ import kotlinx.coroutines.launch
 
 class NotificationViewModel(
     private val getNotificationHistoryUseCase: GetNotificationHistoryUseCase,
-    private val readAsMarkNotificationUseCase: ReadAsMarkNotificationUseCase
+    private val readAsMarkNotificationUseCase: ReadAsMarkNotificationUseCase,
+    private val getUserUseCase: GetUserUseCase,
+    private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
+    private val deleteFcmTokenUseCase: DeleteFcmTokenUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NotificationUiState())
     val uiState = _uiState.asStateFlow()
@@ -25,6 +31,7 @@ class NotificationViewModel(
 
     init {
         fetchNotificationHistories()
+        fetchPushStatus()
     }
 
     fun onAction(action: NotificationAction) {
@@ -32,6 +39,7 @@ class NotificationViewModel(
             is NotificationAction.MarkAsRead -> markAsRead(action.id)
             NotificationAction.MarkAllAsRead -> markAllAsRead()
             is NotificationAction.DeleteNotification -> deleteNotification(action.id)
+            is NotificationAction.TogglePushNotification -> togglePushNotification(action.isEnabled)
         }
     }
 
@@ -58,6 +66,37 @@ class NotificationViewModel(
                     }
                     _event.send(NotificationEvent.ShowError(result.error.message ?: "Unknown error"))
                 }
+            }
+        }
+    }
+
+    private fun fetchPushStatus() {
+        viewModelScope.launch {
+            val result = getUserUseCase()
+            if (result is Result.Success) {
+                val user = result.data
+                _uiState.update {
+                    it.copy(isPushEnabled = user.fcmToken.isNotEmpty())
+                }
+            }
+        }
+    }
+
+    private fun togglePushNotification(isEnabled: Boolean) {
+        viewModelScope.launch {
+            // Optimistic update
+            _uiState.update { it.copy(isPushEnabled = isEnabled) }
+
+            val result = if (isEnabled) {
+                updateFcmTokenUseCase()
+            } else {
+                deleteFcmTokenUseCase()
+            }
+
+            if (result is Result.Error) {
+                // Revert on error
+                _uiState.update { it.copy(isPushEnabled = !isEnabled) }
+                _event.send(NotificationEvent.ShowError(result.error.message ?: "설정 변경에 실패했습니다."))
             }
         }
     }

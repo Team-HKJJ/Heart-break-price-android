@@ -7,6 +7,8 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -60,6 +62,32 @@ fun NotificationScreen(
                     Text("모두 읽음 표시")
                 }
             }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        // Push Notification Setting
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.White, shape = androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
+                .padding(horizontal = 16.dp, vertical = 12.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = "푸시 알림 받기",
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium
+            )
+            Switch(
+                checked = uiState.isPushEnabled,
+                onCheckedChange = { onAction(NotificationAction.TogglePushNotification(it)) },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color.White,
+                    checkedTrackColor = Color(0xFF2563EB)
+                )
+            )
         }
 
         Spacer(modifier = Modifier.height(16.dp))

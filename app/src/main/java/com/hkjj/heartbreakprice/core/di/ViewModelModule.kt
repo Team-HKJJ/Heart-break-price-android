@@ -52,7 +52,10 @@ val viewModelModule = module {
     viewModel {
         NotificationViewModel(
             getNotificationHistoryUseCase = get(),
-            readAsMarkNotificationUseCase = get()
+            readAsMarkNotificationUseCase = get(),
+            getUserUseCase = get(),
+            updateFcmTokenUseCase = get(),
+            deleteFcmTokenUseCase = get()
         )
     }
     
