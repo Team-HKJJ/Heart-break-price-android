@@ -47,8 +47,13 @@ fun SearchScreen(
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
             placeholder = { Text("상품명을 검색하세요...") },
-            leadingIcon = {
-                Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Gray)
+            trailingIcon = {
+                IconButton(onClick = {
+                    onSearchAction(SearchAction.OnSearch)
+                    focusManager.clearFocus()
+                }) {
+                    Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Gray)
+                }
             },
             singleLine = true,
             shape = RoundedCornerShape(8.dp),
@@ -57,8 +62,11 @@ fun SearchScreen(
                 unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent
             ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-            keyboardActions = KeyboardActions(onDone = { focusManager.clearFocus() })
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = {
+                onSearchAction(SearchAction.OnSearch)
+                focusManager.clearFocus()
+            })
         )
 
         // Category Filter
