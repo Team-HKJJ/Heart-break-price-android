@@ -2,7 +2,8 @@ package com.hkjj.heartbreakprice.presentation.screen.signup
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hkjj.heartbreakprice.domain.repository.AuthRepository
+import com.hkjj.heartbreakprice.core.Result
+import com.hkjj.heartbreakprice.domain.usecase.SignUpUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +13,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignUpViewModel(
-    private val authRepository: AuthRepository
+    private val signUpUseCase: SignUpUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignUpUiState())
@@ -68,18 +69,17 @@ class SignUpViewModel(
 
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
-            delay(500) // Simulate network delay
 
-            // Mock signup logic
-            // In a real app, call repository here
-            val isSuccess = true // Assume success
-
-            if (isSuccess) {
+            val result = signUpUseCase(state.email, state.password, state.name)
+            if (result is Result.Success) {
                 _uiState.update { it.copy(isSuccess = true, isLoading = false) }
                 delay(1500)
                 _event.send(SignUpEvent.NavigateToLogin)
             } else {
-                _uiState.update { it.copy(isLoading = false, errorMessage = "이미 가입된 이메일입니다.") }
+                val exception = (result as Result.Error).error
+                _uiState.update {
+                    it.copy(isLoading = false, errorMessage = exception.message ?: "회원가입에 실패했습니다.") 
+                }
             }
         }
     }
