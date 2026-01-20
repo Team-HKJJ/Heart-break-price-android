@@ -49,7 +49,6 @@ class SearchViewModel(
             }
         }
 
-        observeSearchTerm()
     }
 
     fun onAction(action: SearchAction) {
@@ -92,29 +91,23 @@ class SearchViewModel(
             is SearchAction.OnChangeSearchTerm -> {
                 _uiState.value = _uiState.value.copy(searchTerm = action.searchTerm)
             }
-        }
-    }
-
-    private fun observeSearchTerm() {
-        viewModelScope.launch {
-            _uiState
-                .map { it.searchTerm }
-                .debounce(300)
-                .collect { query ->
-                    val result = getSearchedProductUseCase(query)
+            is SearchAction.OnSearch -> {
+                viewModelScope.launch {
+                    val result = getSearchedProductUseCase(_uiState.value.searchTerm)
                     if (result is Result.Success) {
                         allProducts = result.data
                         updateCategories()
                         updateFilteredProducts()
                     }
                 }
+            }
         }
     }
 
     private fun updateCategories() {
         val uniqueCategories = allProducts.map { it.brand }.distinct().filter { it.isNotBlank() }
         val hasEmptyBrand = allProducts.any { it.brand.isBlank() }
-        val finalCategories = if (hasEmptyBrand) {
+        val finalCategories = if (hasEmptyBrand && uniqueCategories.isNotEmpty()) {
             listOf("전체") + uniqueCategories + "기타"
         } else {
             listOf("전체") + uniqueCategories
