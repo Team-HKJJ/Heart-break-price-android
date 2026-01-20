@@ -41,7 +41,6 @@ fun NavigationRoot(
     NavHost(
         navController = navController,
         startDestination = Route.Entry,
-        modifier = Modifier.safeContentPadding()
     ) {
 
         composable<Route.Entry> {
