@@ -10,6 +10,7 @@ import com.hkjj.heartbreakprice.domain.model.WishProduct
 import com.hkjj.heartbreakprice.domain.usecase.AddWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.DeleteWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetWishesUseCase
+import com.hkjj.heartbreakprice.domain.usecase.UpdateTargetPriceUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -20,7 +21,7 @@ class WishViewModel(
     private val addWishUseCase: AddWishUseCase,
     private val deleteWishUseCase: DeleteWishUseCase,
     private val getWishesUseCase: GetWishesUseCase,
-
+    private val updateTargetPriceUseCase: UpdateTargetPriceUseCase
     ) : ViewModel() {
     private val _uiState = MutableStateFlow(WishUiState())
     val uiState = _uiState.asStateFlow()
@@ -88,6 +89,7 @@ class WishViewModel(
     }
 
     private fun updateTargetPrice(id: String, targetPrice: Int) {
+        // Optimistic UI Update
         _uiState.update { currentState ->
             currentState.copy(
                 wishProducts = currentState.wishProducts.map { product ->
@@ -99,6 +101,17 @@ class WishViewModel(
                 },
                 isDialogShow = false
             )
+        }
+
+        viewModelScope.launch {
+            try {
+                updateTargetPriceUseCase(id, targetPrice)
+            } catch (e: Exception) {
+                // Revert on failure (Optional: depending on requirements)
+                // For now, just logging or handling error might be enough, 
+                // but usually optimistic updates should be reverted or user notified.
+                _uiState.update { it.copy(errorMsg = "Failed to update target price") }
+            }
         }
     }
 

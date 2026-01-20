@@ -22,7 +22,6 @@ val viewModelModule = module {
             loginUseCase = get(),
             updateFcmTokenUseCase = get(),
             authRepository = get(),
-//             updateFcmTokenUseCase = get()
         )
     }
 
@@ -45,7 +44,8 @@ val viewModelModule = module {
         WishViewModel(
             addWishUseCase = get(),
             deleteWishUseCase = get(),
-            getWishesUseCase = get()
+            getWishesUseCase = get(),
+            updateTargetPriceUseCase = get()
         )
     }
 

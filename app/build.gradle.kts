@@ -17,9 +17,7 @@ plugins {
 
 android {
     namespace = "com.hkjj.heartbreakprice"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hkjj.heartbreakprice"
