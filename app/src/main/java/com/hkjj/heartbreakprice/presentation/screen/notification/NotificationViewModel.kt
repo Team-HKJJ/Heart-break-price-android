@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.hkjj.heartbreakprice.core.Result
 import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.domain.usecase.DeleteFcmTokenUseCase
+import com.hkjj.heartbreakprice.domain.usecase.DeleteNotificationUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetNotificationHistoryUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetUserUseCase
 import com.hkjj.heartbreakprice.domain.usecase.ReadAsMarkNotificationUseCase
@@ -21,7 +22,8 @@ class NotificationViewModel(
     private val readAsMarkNotificationUseCase: ReadAsMarkNotificationUseCase,
     private val getUserUseCase: GetUserUseCase,
     private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
-    private val deleteFcmTokenUseCase: DeleteFcmTokenUseCase
+    private val deleteFcmTokenUseCase: DeleteFcmTokenUseCase,
+    private val deleteNotificationUseCase: DeleteNotificationUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(NotificationUiState())
     val uiState = _uiState.asStateFlow()
@@ -151,12 +153,22 @@ class NotificationViewModel(
     }
 
     private fun deleteNotification(id: String) {
-        // No delete use case available yet.
-        // Optimistically remove from UI.
-        _uiState.update { state ->
-            state.copy(
-                notifications = state.notifications.filter { it.id != id }
-            )
+        viewModelScope.launch {
+            // Optimistically remove from UI
+            _uiState.update { state ->
+                state.copy(
+                    notifications = state.notifications.filter { it.id != id }
+                )
+            }
+
+            // Perform deletion in backend
+            val result = deleteNotificationUseCase(id)
+            if (result is Result.Error) {
+                // Revert or show error if needed. For now, we'll just show an error message.
+                // Re-fetching might be safer to sync state.
+                fetchNotificationHistories()
+                _event.send(NotificationEvent.ShowError(result.error.message ?: "알림 삭제에 실패했습니다."))
+            }
         }
     }
 }

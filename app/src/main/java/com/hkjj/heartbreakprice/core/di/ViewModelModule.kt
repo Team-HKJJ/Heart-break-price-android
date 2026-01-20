@@ -55,7 +55,8 @@ val viewModelModule = module {
             readAsMarkNotificationUseCase = get(),
             getUserUseCase = get(),
             updateFcmTokenUseCase = get(),
-            deleteFcmTokenUseCase = get()
+            deleteFcmTokenUseCase = get(),
+            deleteNotificationUseCase = get()
         )
     }
     

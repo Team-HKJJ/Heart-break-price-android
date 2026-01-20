@@ -9,7 +9,7 @@ class GetNotificationHistoryUseCase(
 ) {
     suspend operator fun invoke(): Result<List<Notification>, Exception> {
         return try {
-            val notificationHistories = notificationHistoryRepository.getUnreadNotificationHistories()
+            val notificationHistories = notificationHistoryRepository.getAllNotificationHistories()
             Result.Success(notificationHistories)
         } catch (e: Exception) {
             Result.Error(e)
