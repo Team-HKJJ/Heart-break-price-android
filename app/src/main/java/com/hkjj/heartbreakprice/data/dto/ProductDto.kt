@@ -4,17 +4,17 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProductDto(
-    val productId: String,
-    val title: String,
-    val link: String,
-    val image: String,
-    val lprice: String,
-    val hprice: String,
-    val mallName: String,
-    val maker: String,
-    val brand: String,
-    val category1: String,
-    val category2: String,
-    val category3: String,
-    val category4: String
+    val productId: String? = null,
+    val title: String? = null,
+    val link: String? = null,
+    val image: String? = null,
+    val lprice: String? = null,
+    val hprice: String? = null,
+    val mallName: String? = null,
+    val maker: String? = null,
+    val brand: String? = null,
+    val category1: String? = null,
+    val category2: String? = null,
+    val category3: String? = null,
+    val category4: String? = null
 )

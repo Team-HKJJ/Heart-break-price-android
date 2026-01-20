@@ -10,7 +10,7 @@ class MockProductDataSourceImpl : ProductDataSource {
         return ApiResponse.Success(
             statusCode = 200,
             headers = emptyMap(),
-            body = mockProductDtos.filter { it.title.contains(query, ignoreCase = true) }
+            body = mockProductDtos.filter { it.title?.contains(query, ignoreCase = true) ?: false }
         )
     }
 

@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class NaverShoppingResponseDto(
-    val lastBuildDate: String,
-    val total: Int,
-    val start: Int,
-    val display: Int,
-    val items: List<ProductDto>
+    val lastBuildDate: String? = null,
+    val total: Int? = null,
+    val start: Int? = null,
+    val display: Int? = null,
+    val items: List<ProductDto>? = null
 )

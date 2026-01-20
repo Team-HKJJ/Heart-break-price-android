@@ -12,7 +12,7 @@ interface NaverShoppingApi {
         @Header("X-Naver-Client-Id") clientId: String,
         @Header("X-Naver-Client-Secret") clientSecret: String,
         @Query("query") query: String,
-        @Query("display") display: Int = 10,
+        @Query("display") display: Int = 30,
         @Query("start") start: Int = 1
     ): Response<NaverShoppingResponseDto>
 }
