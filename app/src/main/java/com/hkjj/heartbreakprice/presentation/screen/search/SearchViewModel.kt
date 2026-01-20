@@ -107,7 +107,7 @@ class SearchViewModel(
     private fun updateCategories() {
         val uniqueCategories = allProducts.map { it.brand }.distinct().filter { it.isNotBlank() }
         val hasEmptyBrand = allProducts.any { it.brand.isBlank() }
-        val finalCategories = if (hasEmptyBrand) {
+        val finalCategories = if (hasEmptyBrand && uniqueCategories.isNotEmpty()) {
             listOf("전체") + uniqueCategories + "기타"
         } else {
             listOf("전체") + uniqueCategories
