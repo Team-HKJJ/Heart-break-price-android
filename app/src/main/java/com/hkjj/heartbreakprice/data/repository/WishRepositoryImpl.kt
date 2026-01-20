@@ -57,8 +57,8 @@ class WishRepositoryImpl : WishRepository {
 
     override suspend fun addToWish(wishProduct: WishProduct) {
         val uid = userId ?: throw Exception("로그인이 필요합니다.")
-        
-        val data = hashMapOf(
+
+        val wishData = hashMapOf(
             "name" to wishProduct.name,
             "price" to wishProduct.price,
             "originalPrice" to wishProduct.originalPrice,
@@ -72,22 +72,51 @@ class WishRepositoryImpl : WishRepository {
             "productRef" to "Products/${wishProduct.id}"
         )
 
-        firestore.collection("Users")
-            .document(uid)
-            .collection("Wishes")
-            .document(wishProduct.id)
-            .set(data)
-            .await()
+        val productData = hashMapOf(
+            "category" to wishProduct.category,
+            "image" to wishProduct.image,
+            "name" to wishProduct.name,
+            "originalPrice" to (wishProduct.originalPrice ?: 0),
+            "price" to wishProduct.price,
+            "shop" to wishProduct.shop
+        )
+
+        firestore.runBatch { batch ->
+            // 1. Add to User's Wish list
+            val userWishRef = firestore.collection("Users").document(uid)
+                .collection("Wishes").document(wishProduct.id)
+            batch.set(userWishRef, wishData)
+
+            // 2. Add/Update Product info
+            val productRef = firestore.collection("Products").document(wishProduct.id)
+            batch.set(productRef, productData)
+
+            // 3. Add to Product's UserList
+            val userListRef = productRef.collection("UserList").document(uid)
+            batch.set(userListRef, hashMapOf("uid" to uid))
+        }.await()
     }
 
     override suspend fun removeFromWishes(productId: String) {
         val uid = userId ?: return
-        firestore.collection("Users")
-            .document(uid)
-            .collection("Wishes")
-            .document(productId)
-            .delete()
-            .await()
+
+        val userWishRef = firestore.collection("Users").document(uid)
+            .collection("Wishes").document(productId)
+
+        val productRef = firestore.collection("Products").document(productId)
+        val userListRef = productRef.collection("UserList").document(uid)
+
+        // 1. Delete from User's Wish list and Product's UserList
+        firestore.runBatch { batch ->
+            batch.delete(userWishRef)
+            batch.delete(userListRef)
+        }.await()
+
+        // 2. Check if UserList is empty and delete Product if so
+        val userListSnapshot = productRef.collection("UserList").limit(1).get().await()
+        if (userListSnapshot.isEmpty) {
+            productRef.delete().await()
+        }
     }
 
     override suspend fun updateTargetPrice(productId: String, targetPrice: Int) {
