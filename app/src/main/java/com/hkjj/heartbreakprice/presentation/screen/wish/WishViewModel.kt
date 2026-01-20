@@ -1,11 +1,9 @@
 package com.hkjj.heartbreakprice.presentation.screen.wish
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hkjj.heartbreakprice.core.Result
 import com.hkjj.heartbreakprice.core.util.TimeUtil
 import com.hkjj.heartbreakprice.domain.model.Product
 import com.hkjj.heartbreakprice.domain.model.WishProduct
@@ -14,6 +12,7 @@ import com.hkjj.heartbreakprice.domain.usecase.DeleteWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetWishesUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
@@ -74,19 +73,17 @@ class WishViewModel(
 
     private fun getWishes() {
         viewModelScope.launch {
-            when (val result = getWishesUseCase.invoke()) {
-                is Result.Error -> {
+            getWishesUseCase()
+                .catch { e ->
                     _uiState.update {
-                        it.copy(errorMsg = result.error.message)
+                        it.copy(errorMsg = e.message)
                     }
                 }
-
-                is Result.Success -> {
+                .collect { wishes ->
                     _uiState.update {
-                        it.copy(wishProducts = result.data)
+                        it.copy(wishProducts = wishes)
                     }
                 }
-            }
         }
     }
 

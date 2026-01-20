@@ -4,10 +4,10 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hkjj.heartbreakprice.core.Result
+import com.hkjj.heartbreakprice.domain.usecase.LoginUseCase
 import com.hkjj.heartbreakprice.domain.repository.AuthRepository
 import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
+    private val loginUseCase: LoginUseCase
     private val authRepository: AuthRepository,
     private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
 ) : ViewModel() {
@@ -59,20 +60,28 @@ class SignInViewModel(
 
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
-            // Simulate network delay
-            delay(500)
 
-            // Mock login logic
-            if (email == "demo@example.com" && password == "demo1234") {
-                authRepository.signIn()
-                // TODO 로그인 성공 시 FCM 토큰 저장
-                updateToken()
-                _event.send(SignInEvent.NavigateToMain)
+            val result = loginUseCase(email, password)
+            if (result is Result.Success) {
+                 updateToken()
+                 _event.send(SignInEvent.NavigateToMain)
+
+            // Simulate network delay
+//             delay(500)
+
+//             // Mock login logic
+//             if (email == "demo@example.com" && password == "demo1234") {
+//                 authRepository.signIn()
+//                 // TODO 로그인 성공 시 FCM 토큰 저장
+//                 updateToken()
+//                 _event.send(SignInEvent.NavigateToMain)
+
             } else {
+                val exception = (result as Result.Error).error
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "이메일 또는 비밀번호가 올바르지 않습니다."
+                        errorMessage = exception.message ?: "로그인에 실패했습니다."
                     )
                 }
             }
