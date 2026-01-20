@@ -18,7 +18,8 @@ class RemoteProductDataSourceImpl(
         return try {
             val response = api.searchProducts(clientId, clientSecret, query)
             if (response.isSuccessful) {
-                val products = response.body()?.items ?: emptyList()
+                val rawProducts = response.body()?.items ?: emptyList()
+                val products = rawProducts.map { it.copy(title = removeHtmlTags(it.title)) }
                 Log.d("RemoteProductDataSource", "Fetch success: ${products.size} products found")
                 ApiResponse.Success(
                     statusCode = response.code(),
@@ -38,5 +39,16 @@ class RemoteProductDataSourceImpl(
             Log.e("RemoteProductDataSource", "Network/Parsing error: ${e.message}", e)
             ApiResponse.NetworkError(e)
         }
+    }
+
+    private fun removeHtmlTags(text: String?): String? {
+        if (text == null) return null
+        return text.replace(Regex("<[^>]*>"), "")
+            .replace("&quot;", "\"")
+            .replace("&lt;", "<")
+            .replace("&gt;", ">")
+            .replace("&amp;", "&")
+            .replace("&apos;", "'")
+            .replace("&nbsp;", " ")
     }
 }
