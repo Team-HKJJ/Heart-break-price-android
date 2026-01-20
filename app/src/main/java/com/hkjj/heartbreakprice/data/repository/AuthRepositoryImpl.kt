@@ -67,8 +67,8 @@ class AuthRepositoryImpl : AuthRepository {
     }
 
     override suspend fun updateFcmToken(token: String) {
-        // TODO firestore Token Update
-        return Unit
+        val uid = auth.currentUser?.uid ?: return
+        firestore.collection("Users").document(uid).update("fcmToken", token).await()
     }
 }
 
