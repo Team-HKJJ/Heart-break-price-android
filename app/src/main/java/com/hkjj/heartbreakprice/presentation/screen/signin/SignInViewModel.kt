@@ -1,8 +1,11 @@
 package com.hkjj.heartbreakprice.presentation.screen.signin
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hkjj.heartbreakprice.core.Result
 import com.hkjj.heartbreakprice.domain.repository.AuthRepository
+import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,7 +15,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val authRepository: AuthRepository
+    private val authRepository: AuthRepository,
+    private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInUiState())
@@ -60,11 +64,9 @@ class SignInViewModel(
 
             // Mock login logic
             if (email == "demo@example.com" && password == "demo1234") {
-                // authRepository.setSignIn(true) // Assuming repository has a method to update state
-                // For now, since AuthRepositoryImpl only has a flow, we'll just emit success event
-                // Ideally, AuthRepository should have a login method.
-                // Assuming NavigationRoot observes AuthRepository state change, we might not need an explicit event if the repo updates the state.
-                // However, following the requested pattern:
+                authRepository.signIn()
+                // TODO 로그인 성공 시 FCM 토큰 저장
+                updateToken()
                 _event.send(SignInEvent.NavigateToMain)
             } else {
                 _uiState.update {
@@ -73,6 +75,15 @@ class SignInViewModel(
                         errorMessage = "이메일 또는 비밀번호가 올바르지 않습니다."
                     )
                 }
+            }
+        }
+    }
+
+    private fun updateToken() {
+        viewModelScope.launch {
+            when (val result = updateFcmTokenUseCase()) {
+                is Result.Success -> Log.d("FCM_LOG", "토큰 업데이트 완료")
+                is Result.Error -> Log.e("FCM_LOG", "토큰 업데이트 실패: ${result.error.message}")
             }
         }
     }

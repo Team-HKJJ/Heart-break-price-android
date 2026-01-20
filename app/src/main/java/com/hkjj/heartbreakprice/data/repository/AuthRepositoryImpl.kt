@@ -9,6 +9,10 @@ class AuthRepositoryImpl : AuthRepository {
     private val _isSignIn = MutableStateFlow(false)
     override val isSignIn = _isSignIn.asStateFlow()
 
+    override suspend fun signIn() {
+        _isSignIn.value = true
+    }
+
     override suspend fun logout() {
         _isSignIn.value = false
     }
@@ -19,5 +23,10 @@ class AuthRepositoryImpl : AuthRepository {
             email = "misterjerry@example.com",
             fcmToken = "test"
         )
+    }
+
+    override suspend fun updateFcmToken(token: String) {
+        // TODO firestore Token Update
+        return Unit
     }
 }
