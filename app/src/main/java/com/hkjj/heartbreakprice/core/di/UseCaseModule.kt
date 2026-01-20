@@ -12,6 +12,7 @@ import com.hkjj.heartbreakprice.domain.usecase.ReadAsMarkNotificationUseCase
 import com.hkjj.heartbreakprice.domain.usecase.LogoutUseCase
 import com.hkjj.heartbreakprice.domain.usecase.SignUpUseCase
 import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
+import com.hkjj.heartbreakprice.domain.usecase.UpdateTargetPriceUseCase
 import org.koin.dsl.module
 
 val usecaseModule = module {
@@ -27,4 +28,5 @@ val usecaseModule = module {
     factory { SignUpUseCase(get()) }
     factory { UpdateFcmTokenUseCase(get(), get()) }
     factory { GetSignInStatusUseCase(get()) }
+    factory { UpdateTargetPriceUseCase(get()) }
 }
