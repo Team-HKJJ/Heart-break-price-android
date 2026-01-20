@@ -19,19 +19,25 @@ val viewModelModule = module {
 
     viewModel {
         SignInViewModel(
-            authRepository = get()
+            loginUseCase = get(),
+            updateFcmTokenUseCase = get(),
+            authRepository = get(),
+//             updateFcmTokenUseCase = get()
         )
     }
 
     viewModel {
         SignUpViewModel(
-            authRepository = get()
+            signUpUseCase = get()
         )
     }
 
     viewModel {
         SearchViewModel(
             getSearchedProductUseCase = get(),
+            addWishUseCase = get(),
+            deleteWishUseCase = get(),
+            getWishesUseCase = get()
         )
     }
     

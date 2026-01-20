@@ -1,10 +1,13 @@
 package com.hkjj.heartbreakprice.presentation.screen.signin
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.hkjj.heartbreakprice.core.Result
+import com.hkjj.heartbreakprice.domain.usecase.LoginUseCase
 import com.hkjj.heartbreakprice.domain.repository.AuthRepository
+import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -12,7 +15,9 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val authRepository: AuthRepository
+    private val loginUseCase: LoginUseCase,
+    private val authRepository: AuthRepository,
+    private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SignInUiState())
@@ -55,24 +60,39 @@ class SignInViewModel(
 
             _uiState.update { it.copy(isLoading = true, errorMessage = "") }
 
-            // Simulate network delay
-            delay(500)
 
-            // Mock login logic
-            if (email == "demo@example.com" && password == "demo1234") {
-                // authRepository.setSignIn(true) // Assuming repository has a method to update state
-                // For now, since AuthRepositoryImpl only has a flow, we'll just emit success event
-                // Ideally, AuthRepository should have a login method.
-                // Assuming NavigationRoot observes AuthRepository state change, we might not need an explicit event if the repo updates the state.
-                // However, following the requested pattern:
-                _event.send(SignInEvent.NavigateToMain)
+            val result = loginUseCase(email, password)
+            if (result is Result.Success) {
+                 updateToken()
+                 _event.send(SignInEvent.NavigateToMain)
+
+            // Simulate network delay
+//             delay(500)
+
+//             // Mock login logic
+//             if (email == "demo@example.com" && password == "demo1234") {
+//                 authRepository.signIn()
+//                 // TODO 로그인 성공 시 FCM 토큰 저장
+//                 updateToken()
+//                 _event.send(SignInEvent.NavigateToMain)
+
             } else {
+                val exception = (result as Result.Error).error
                 _uiState.update {
                     it.copy(
                         isLoading = false,
-                        errorMessage = "이메일 또는 비밀번호가 올바르지 않습니다."
+                        errorMessage = exception.message ?: "로그인에 실패했습니다."
                     )
                 }
+            }
+        }
+    }
+
+    private fun updateToken() {
+        viewModelScope.launch {
+            when (val result = updateFcmTokenUseCase()) {
+                is Result.Success -> Log.d("FCM_LOG", "토큰 업데이트 완료")
+                is Result.Error -> Log.e("FCM_LOG", "토큰 업데이트 실패: ${result.error.message}")
             }
         }
     }

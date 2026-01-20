@@ -2,10 +2,14 @@ package com.hkjj.heartbreakprice.data.repository
 
 import com.hkjj.heartbreakprice.domain.model.WishProduct
 import com.hkjj.heartbreakprice.domain.repository.WishRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 
 class MockWishRepositoryImpl : WishRepository {
 
-    private val wishProducts = mutableListOf(
+    private val _wishProducts = MutableStateFlow(listOf(
         WishProduct(
             id = "1",
             name = "갤럭시 S24 울트라 256GB",
@@ -66,27 +70,29 @@ class MockWishRepositoryImpl : WishRepository {
             addedDate = "2026-01-14T14:45:20",
             url=""
         )
-    )
+    ))
 
-    override suspend fun getWishes(): List<WishProduct> {
-        return wishProducts.toList()
+    override fun getWishes(): Flow<List<WishProduct>> {
+        return _wishProducts.asStateFlow()
     }
 
     override suspend fun addToWish(wishProduct: WishProduct) {
-        if (wishProducts.none { it.id == wishProduct.id }) {
-            wishProducts.add(wishProduct)
+        _wishProducts.update { current ->
+            if (current.none { it.id == wishProduct.id }) current + wishProduct else current
         }
     }
 
     override suspend fun removeFromWishes(productId: String) {
-        wishProducts.removeAll { it.id == productId }
+        _wishProducts.update { current ->
+            current.filter { it.id != productId }
+        }
     }
 
     override suspend fun updateTargetPrice(productId: String, targetPrice: Int) {
-        val index = wishProducts.indexOfFirst { it.id == productId }
-        if (index != -1) {
-            val updatedProduct = wishProducts[index].copy(targetPrice = targetPrice)
-            wishProducts[index] = updatedProduct
+        _wishProducts.update { current ->
+            current.map { 
+                if (it.id == productId) it.copy(targetPrice = targetPrice) else it
+            }
         }
     }
 }
