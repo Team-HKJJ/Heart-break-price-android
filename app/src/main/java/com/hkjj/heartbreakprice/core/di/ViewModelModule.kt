@@ -45,7 +45,8 @@ val viewModelModule = module {
         WishViewModel(
             addWishUseCase = get(),
             deleteWishUseCase = get(),
-            getWishesUseCase = get()
+            getWishesUseCase = get(),
+            updateTargetPriceUseCase = get()
         )
     }
 
