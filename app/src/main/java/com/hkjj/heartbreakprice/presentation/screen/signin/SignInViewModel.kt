@@ -15,7 +15,7 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SignInViewModel(
-    private val loginUseCase: LoginUseCase
+    private val loginUseCase: LoginUseCase,
     private val authRepository: AuthRepository,
     private val updateFcmTokenUseCase: UpdateFcmTokenUseCase,
 ) : ViewModel() {

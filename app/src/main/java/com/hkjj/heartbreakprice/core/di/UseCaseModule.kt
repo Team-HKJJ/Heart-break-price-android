@@ -11,8 +11,6 @@ import com.hkjj.heartbreakprice.domain.usecase.LoginUseCase
 import com.hkjj.heartbreakprice.domain.usecase.ReadAsMarkNotificationUseCase
 import com.hkjj.heartbreakprice.domain.usecase.LogoutUseCase
 import com.hkjj.heartbreakprice.domain.usecase.SignUpUseCase
-import com.hkjj.heartbreakprice.domain.usecase.LogoutUseCase
-import com.hkjj.heartbreakprice.domain.usecase.ReadAsMarkNotificationUseCase
 import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import org.koin.dsl.module
 
