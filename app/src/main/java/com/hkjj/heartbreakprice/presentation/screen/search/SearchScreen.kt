@@ -22,7 +22,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hkjj.heartbreakprice.presentation.component.ProductItem
-import java.util.*
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -36,7 +36,7 @@ fun SearchScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .background(Color(0xFFF9FAFB)) // Gray 50
+            .background(AppColors.Background) // Gray 50
             .padding(horizontal = 16.dp, vertical = 24.dp)
     ) {
         // Search Bar
@@ -52,7 +52,7 @@ fun SearchScreen(
                     onSearchAction(SearchAction.OnSearch)
                     focusManager.clearFocus()
                 }) {
-                    Icon(Icons.Default.Search, contentDescription = "Search", tint = Color.Gray)
+                    Icon(Icons.Default.Search, contentDescription = "Search", tint = AppColors.Gray500)
                 }
             },
             singleLine = true,
@@ -81,10 +81,10 @@ fun SearchScreen(
                 Button(
                     onClick = { onSearchAction(SearchAction.CategoryClick(category)) },
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSelected) MaterialTheme.colorScheme.primary else Color.White,
-                        contentColor = if (isSelected) Color.White else Color.Black
+                        containerColor = if (isSelected) MaterialTheme.colorScheme.primary else AppColors.White,
+                        contentColor = if (isSelected) AppColors.White else AppColors.Gray900
                     ),
-                    border = if (isSelected) null else BorderStroke(1.dp, Color.LightGray),
+                    border = if (isSelected) null else BorderStroke(1.dp, AppColors.Gray300),
                     contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
                     modifier = Modifier.height(32.dp)
                 ) {
@@ -99,7 +99,7 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "검색 결과가 없습니다.", color = Color.Gray)
+                Text(text = "검색 결과가 없습니다.", color = AppColors.Gray500)
             }
         } else {
             LazyColumn(

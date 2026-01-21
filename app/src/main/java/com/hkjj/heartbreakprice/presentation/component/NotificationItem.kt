@@ -30,7 +30,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -40,6 +39,7 @@ import coil.compose.AsyncImage
 import com.hkjj.heartbreakprice.core.util.TimeUtil.formatTimeAgo
 import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.domain.model.NotificationType
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun NotificationItem(
@@ -49,13 +49,13 @@ fun NotificationItem(
 ) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColors.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
         modifier = Modifier
             .fillMaxWidth()
             .then(
                 if (!notification.isRead) {
-                    Modifier.border(2.dp, Color(0xFFDBEAFE), RoundedCornerShape(12.dp))
+                    Modifier.border(2.dp, AppColors.PrimaryLight, RoundedCornerShape(12.dp))
                 } else {
                     Modifier
                 }
@@ -70,7 +70,7 @@ fun NotificationItem(
                 modifier = Modifier
                     .size(80.dp)
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Gray)
+                    .background(AppColors.Gray400)
             )
 
             Spacer(modifier = Modifier.width(16.dp))
@@ -83,9 +83,9 @@ fun NotificationItem(
                             .size(32.dp)
                             .background(
                                 color = when (notification.type) {
-                                    NotificationType.PRICE_DROP -> Color(0xFFEFF6FF)
-                                    NotificationType.TARGET_REACHED -> Color(0xFFF0FDF4)
-                                    NotificationType.BACK_IN_STOCK -> Color(0xFFFFF7ED)
+                                    NotificationType.PRICE_DROP -> AppColors.PrimaryLight
+                                    NotificationType.TARGET_REACHED -> AppColors.Success.copy(alpha = 0.1f)
+                                    NotificationType.BACK_IN_STOCK -> AppColors.Warning.copy(alpha = 0.1f)
                                 },
                                 shape = RoundedCornerShape(8.dp)
                             ),
@@ -99,9 +99,9 @@ fun NotificationItem(
                             },
                             contentDescription = null,
                             tint = when (notification.type) {
-                                NotificationType.PRICE_DROP -> Color(0xFF2563EB)
-                                NotificationType.TARGET_REACHED -> Color(0xFF16A34A)
-                                NotificationType.BACK_IN_STOCK -> Color(0xFFEA580C)
+                                NotificationType.PRICE_DROP -> AppColors.Primary
+                                NotificationType.TARGET_REACHED -> AppColors.Success
+                                NotificationType.BACK_IN_STOCK -> AppColors.Warning
                             },
                             modifier = Modifier.size(20.dp)
                         )
@@ -120,7 +120,7 @@ fun NotificationItem(
                         Text(
                             text = notification.message,
                             style = MaterialTheme.typography.bodyMedium,
-                            color = Color(0xFF4B5563)
+                            color = AppColors.Gray600
                         )
                     }
                 }
@@ -133,7 +133,7 @@ fun NotificationItem(
                         Text(
                             text = "${notification.oldPrice}원",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color(0xFF9CA3AF),
+                            color = AppColors.Gray400,
                             textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -141,12 +141,12 @@ fun NotificationItem(
                             text = "${notification.newPrice}원",
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
-                            color = Color(0xFF2563EB)
+                            color = AppColors.Primary
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Badge(containerColor = Color(0xFFEF4444)) {
+                        Badge(containerColor = AppColors.Error) {
                             val discount = ((1.0 - notification.newPrice.toDouble() / notification.oldPrice) * 100).toInt()
-                            Text("$discount% 할인", color = Color.White, maxLines = 1)
+                            Text("$discount% 할인", color = AppColors.White, maxLines = 1)
                         }
                     }
                 }
@@ -159,12 +159,12 @@ fun NotificationItem(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Notifications, contentDescription = null, tint = Color(0xFF9CA3AF), modifier = Modifier.size(12.dp)) // Using Notifications as Clock replacement
+                        Icon(Icons.Default.Notifications, contentDescription = null, tint = AppColors.Gray400, modifier = Modifier.size(12.dp)) // Using Notifications as Clock replacement
                         Spacer(modifier = Modifier.width(4.dp))
                         Text(
                             text = formatTimeAgo(notification.timestamp),
                             style = MaterialTheme.typography.labelSmall,
-                            color = Color(0xFF6B7280)
+                            color = AppColors.Gray500
                         )
                     }
 
@@ -174,14 +174,14 @@ fun NotificationItem(
                                 onClick = { onMarkAsRead(notification.id) },
                                 modifier = Modifier.height(32.dp)
                             ) {
-                                Text("읽음 표시", color = Color(0xFF2563EB), fontSize = 12.sp)
+                                Text("읽음 표시", color = AppColors.Primary, fontSize = 12.sp)
                             }
                         }
                         IconButton(
                             onClick = { onDelete(notification.id) },
                             modifier = Modifier.size(32.dp)
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "삭제", tint = Color(0xFFDC2626), modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Delete, contentDescription = "삭제", tint = AppColors.Error, modifier = Modifier.size(16.dp))
                         }
                     }
                 }

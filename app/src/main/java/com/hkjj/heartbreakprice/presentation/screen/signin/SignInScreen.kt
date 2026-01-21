@@ -33,16 +33,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun SignInScreen(
@@ -56,7 +55,7 @@ fun SignInScreen(
             .fillMaxSize()
             .background(
                 brush = Brush.linearGradient(
-                    colors = listOf(Color(0xFFEFF6FF), Color(0xFFE0E7FF)) // blue-50 to indigo-100
+                    colors = listOf(AppColors.PrimaryLight, AppColors.Primary.copy(alpha = 0.2f)) // blue-50 to indigo-100
                 )
             )
             .systemBarsPadding()
@@ -74,13 +73,13 @@ fun SignInScreen(
             Box(
                 modifier = Modifier
                     .size(64.dp)
-                    .background(Color(0xFF2563EB), RoundedCornerShape(16.dp)),
+                    .background(AppColors.Primary, RoundedCornerShape(16.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     Icons.Default.ShoppingCart,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = AppColors.White,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -89,12 +88,12 @@ fun SignInScreen(
                 "심쿵가",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF111827)
+                color = AppColors.Gray900
             )
             Text(
                 "원하는 가격에 상품을 구매하세요",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF4B5563)
+                color = AppColors.Gray600
             )
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -102,7 +101,7 @@ fun SignInScreen(
             // Login Form
             Card(
                 shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = Color.White),
+                colors = CardDefaults.cardColors(containerColor = AppColors.White),
                 elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -111,7 +110,7 @@ fun SignInScreen(
                         "로그인",
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
-                        color = Color(0xFF111827),
+                        color = AppColors.Gray900,
                         modifier = Modifier.padding(bottom = 24.dp)
                     )
 
@@ -119,7 +118,7 @@ fun SignInScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(Color(0xFFFEE2E2), RoundedCornerShape(8.dp))
+                                .background(AppColors.Error.copy(alpha = 0.1f), RoundedCornerShape(8.dp))
                                 .padding(12.dp)
                                 .padding(bottom = 16.dp),
                             verticalAlignment = Alignment.CenterVertically
@@ -127,13 +126,13 @@ fun SignInScreen(
                             Icon(
                                 Icons.Default.Warning,
                                 contentDescription = null,
-                                tint = Color(0xFFDC2626),
+                                tint = AppColors.Error,
                                 modifier = Modifier.size(16.dp)
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
                                 state.errorMessage,
-                                color = Color(0xFFB91C1C),
+                                color = AppColors.Error,
                                 style = MaterialTheme.typography.bodySmall
                             )
                         }
@@ -153,7 +152,7 @@ fun SignInScreen(
                             Icon(
                                 Icons.Default.Email,
                                 contentDescription = null,
-                                tint = Color.Gray
+                                tint = AppColors.Gray500
                             )
                         },
                         placeholder = { Text("example@email.com") },
@@ -177,7 +176,7 @@ fun SignInScreen(
                             Icon(
                                 Icons.Default.Lock,
                                 contentDescription = null,
-                                tint = Color.Gray
+                                tint = AppColors.Gray500
                             )
                         },
                         placeholder = { Text("••••••••") },
@@ -194,7 +193,7 @@ fun SignInScreen(
                         modifier = Modifier.fillMaxWidth(),
                         enabled = !state.isLoading,
                         shape = RoundedCornerShape(8.dp),
-                        colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
+                        colors = ButtonDefaults.buttonColors(containerColor = AppColors.Primary)
                     ) {
                         Text(if (state.isLoading) "로그인 중..." else "로그인")
                     }
@@ -209,10 +208,10 @@ fun SignInScreen(
                         Text(
                             "계정이 없으신가요?",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray
+                            color = AppColors.Gray500
                         )
                         TextButton(onClick = { onAction(SignInAction.OnSignUpClick) }) {
-                            Text("회원가입", color = Color(0xFF2563EB))
+                            Text("회원가입", color = AppColors.Primary)
                         }
                     }
 
@@ -222,10 +221,10 @@ fun SignInScreen(
                             .fillMaxWidth()
                             .border(
                                 1.dp,
-                                Color.LightGray,
+                                AppColors.Gray300,
                                 RoundedCornerShape(8.dp)
                             )
-                            .background(Color(0xFFF9FAFB), RoundedCornerShape(8.dp))
+                            .background(AppColors.Background, RoundedCornerShape(8.dp))
                             .padding(16.dp)
                     ) {
                         Column(
@@ -235,18 +234,18 @@ fun SignInScreen(
                             Text(
                                 "데모 계정으로 로그인",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.Gray
+                                color = AppColors.Gray500
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
                                 "이메일: demo@example.com",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color(0xFF4B5563)
+                                color = AppColors.Gray600
                             )
                             Text(
                                 "비밀번호: demo1234",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color(0xFF4B5563)
+                                color = AppColors.Gray600
                             )
                         }
                     }

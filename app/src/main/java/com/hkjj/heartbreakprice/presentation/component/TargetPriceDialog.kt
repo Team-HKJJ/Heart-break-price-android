@@ -31,6 +31,7 @@ import androidx.compose.ui.window.Dialog
 import com.hkjj.heartbreakprice.domain.model.WishProduct
 import java.text.NumberFormat
 import java.util.Locale
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun TargetPriceDialog(
@@ -43,7 +44,7 @@ fun TargetPriceDialog(
     Dialog(onDismissRequest = onDismiss) {
         Card(
             shape = RoundedCornerShape(16.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White)
+            colors = CardDefaults.cardColors(containerColor = AppColors.White)
         ) {
             Column(modifier = Modifier.padding(24.dp)) {
                 Text(text = "목표 가격 설정", style = MaterialTheme.typography.titleLarge)
@@ -74,7 +75,7 @@ fun TargetPriceDialog(
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth()
                 )
-                Text("이 가격 이하로 할인되면 알림을 받습니다", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text("이 가격 이하로 할인되면 알림을 받습니다", style = MaterialTheme.typography.bodySmall, color = AppColors.Gray500)
 
                 Spacer(modifier = Modifier.height(24.dp))
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {

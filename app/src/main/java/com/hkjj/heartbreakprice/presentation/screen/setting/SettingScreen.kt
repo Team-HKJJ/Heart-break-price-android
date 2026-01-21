@@ -33,11 +33,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.hkjj.heartbreakprice.domain.model.SettingItem
 import com.hkjj.heartbreakprice.presentation.component.SettingsSection
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun SettingScreen(
@@ -49,14 +49,14 @@ fun SettingScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF9FAFB))
+            .background(AppColors.Background)
             .verticalScroll(rememberScrollState())
             .padding(16.dp)
     ) {
         // User Profile
         Card(
             shape = RoundedCornerShape(12.dp),
-            colors = CardDefaults.cardColors(containerColor = Color.White),
+            colors = CardDefaults.cardColors(containerColor = AppColors.White),
             modifier = Modifier.padding(bottom = 24.dp)
         ) {
             Row(
@@ -69,13 +69,13 @@ fun SettingScreen(
                     modifier = Modifier
                         .size(64.dp)
                         .clip(CircleShape)
-                        .background(Color(0xFF2563EB)),
+                        .background(AppColors.Primary),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
                         Icons.Default.Person,
                         contentDescription = null,
-                        tint = Color.White,
+                        tint = AppColors.White,
                         modifier = Modifier.size(32.dp)
                     )
                 }
@@ -83,9 +83,9 @@ fun SettingScreen(
                 Column {
                     Text(user.name, style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.Bold)
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Icon(Icons.Default.Email, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(14.dp))
+                        Icon(Icons.Default.Email, contentDescription = null, tint = AppColors.Gray500, modifier = Modifier.size(14.dp))
                         Spacer(modifier = Modifier.width(4.dp))
-                        Text(user.email, color = Color.Gray, style = MaterialTheme.typography.bodyMedium)
+                        Text(user.email, color = AppColors.Gray500, style = MaterialTheme.typography.bodyMedium)
                     }
                 }
             }
@@ -130,7 +130,7 @@ fun SettingScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(50.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF4444)),
+            colors = ButtonDefaults.buttonColors(containerColor = AppColors.Error),
             shape = RoundedCornerShape(8.dp)
         ) {
             Icon(Icons.Default.ExitToApp, contentDescription = null)

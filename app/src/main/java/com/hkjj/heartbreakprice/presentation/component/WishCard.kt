@@ -43,6 +43,7 @@ import coil.compose.AsyncImage
 import com.hkjj.heartbreakprice.domain.model.WishProduct
 import java.text.NumberFormat
 import java.util.Locale
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun WishCard(
@@ -54,7 +55,7 @@ fun WishCard(
 ) {
     Card(
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColors.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Column {
@@ -63,7 +64,7 @@ fun WishCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
-                    .background(Color.Gray)
+                    .background(AppColors.Gray400)
             ) {
                 AsyncImage(
                     model = wishProduct.image,
@@ -78,13 +79,13 @@ fun WishCard(
                         val discount = ((1 - wishProduct.price.toDouble() / original) * 100).toInt()
                         Box(
                             modifier = Modifier
-                                .background(Color.Red, RoundedCornerShape(8.dp))
+                                .background(AppColors.Error, RoundedCornerShape(8.dp))
                                 .padding(horizontal = 6.dp)
                                 .padding(bottom = 4.dp)
                         ) {
                             Text(
                                 text = "$discount% 할인",
-                                color = Color.White,
+                                color = AppColors.White,
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
@@ -100,7 +101,7 @@ fun WishCard(
                         ) {
                             Text(
                                 text = targetPriceText,
-                                color = Color.White,
+                                color = AppColors.White,
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
@@ -113,7 +114,7 @@ fun WishCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(4.dp))
+                            .border(1.dp, AppColors.Gray300, RoundedCornerShape(4.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(text = wishProduct.category, style = MaterialTheme.typography.labelSmall)
@@ -123,12 +124,12 @@ fun WishCard(
                         Icons.Default.DateRange,
                         contentDescription = null,
                         modifier = Modifier.size(12.dp),
-                        tint = Color.Gray
+                        tint = AppColors.Gray500
                     )
                     Text(
                         text = wishProduct.addedDate.substring(0, 10),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray
+                        color = AppColors.Gray500
                     )
                 }
 
@@ -139,18 +140,18 @@ fun WishCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(wishProduct.shop, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(wishProduct.shop, style = MaterialTheme.typography.bodySmall, color = AppColors.Gray500)
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Price
-                Text("현재가", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                Text("현재가", style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     wishProduct.originalPrice?.let {
                         Text(
                             text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(it)}원",
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray,
+                            color = AppColors.Gray500,
                             textDecoration = TextDecoration.LineThrough
                         )
                         Spacer(modifier = Modifier.width(4.dp))
@@ -164,7 +165,7 @@ fun WishCard(
 
                 if (wishProduct.targetPrice != null) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("목표가", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                    Text("목표가", style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
                     Text(
                         text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.targetPrice)}원",
                         style = MaterialTheme.typography.titleMedium,
@@ -182,7 +183,7 @@ fun WishCard(
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(0.dp),
                         colors = ButtonDefaults.outlinedButtonColors(),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, AppColors.Gray300),
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         if (wishProduct.targetPrice != null) {
@@ -204,7 +205,7 @@ fun WishCard(
 
                     Button(
                         onClick = onRemove,
-                        colors = ButtonDefaults.textButtonColors(contentColor = Color.Red),
+                        colors = ButtonDefaults.textButtonColors(contentColor = AppColors.Error),
                         modifier = Modifier.width(32.dp),
                         contentPadding = PaddingValues(0.dp),
                         shape = RoundedCornerShape(4.dp)

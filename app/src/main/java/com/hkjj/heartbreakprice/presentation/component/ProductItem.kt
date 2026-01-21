@@ -12,7 +12,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -21,6 +20,7 @@ import coil.compose.AsyncImage
 import com.hkjj.heartbreakprice.domain.model.Product
 import java.text.NumberFormat
 import java.util.*
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun ProductItem(
@@ -31,7 +31,7 @@ fun ProductItem(
     Card(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColors.White),
         elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
@@ -42,7 +42,7 @@ fun ProductItem(
                 modifier = Modifier
                     .size(96.dp) // sm:size-32 usually 128px, using 96dp approx
                     .clip(RoundedCornerShape(8.dp))
-                    .background(Color.Gray),
+                    .background(AppColors.Gray400),
                 contentScale = ContentScale.Crop
             )
 
@@ -57,13 +57,13 @@ fun ProductItem(
                     // Category Badge
                     Box(
                         modifier = Modifier
-                            .background(Color.White, RoundedCornerShape(4.dp))
+                            .background(AppColors.White, RoundedCornerShape(4.dp))
                             .padding(end = 8.dp)
                     ) {
                         Text(
                             text = product.category,
                             style = MaterialTheme.typography.labelSmall,
-                            modifier = Modifier.border(1.dp, Color.LightGray, RoundedCornerShape(4.dp))
+                            modifier = Modifier.border(1.dp, AppColors.Gray300, RoundedCornerShape(4.dp))
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         )
                     }
@@ -73,12 +73,12 @@ fun ProductItem(
                         val discount = ((1 - product.price.toDouble() / original) * 100).toInt()
                         Box(
                             modifier = Modifier
-                                .background(Color.Red, RoundedCornerShape(4.dp))
+                                .background(AppColors.Error, RoundedCornerShape(4.dp))
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
                             Text(
                                 text = "$discount% 할인",
-                                color = Color.White,
+                                color = AppColors.White,
                                 style = MaterialTheme.typography.labelSmall
                             )
                         }
@@ -96,7 +96,7 @@ fun ProductItem(
                 Text(
                     text = product.shop,
                     style = MaterialTheme.typography.bodySmall,
-                    color = Color.Gray
+                    color = AppColors.Gray500
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
@@ -111,7 +111,7 @@ fun ProductItem(
                             Text(
                                 text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(it)}원",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = Color.Gray,
+                                color = AppColors.Gray500,
                                 textDecoration = TextDecoration.LineThrough
                             )
                         }
@@ -132,12 +132,12 @@ fun ProductItem(
                         } else {
                             ButtonDefaults.outlinedButtonColors()
                         },
-                        border = if (!isFavorite) androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray) else null
+                        border = if (!isFavorite) androidx.compose.foundation.BorderStroke(1.dp, AppColors.Gray300) else null
                     ) {
                         Icon(
                             imageVector = Icons.Default.Favorite,
                             contentDescription = "Favorite",
-                            tint = if (isFavorite) Color.White else Color.Gray,
+                            tint = if (isFavorite) AppColors.White else AppColors.Gray500,
                             modifier = Modifier.size(16.dp)
                         )
                     }

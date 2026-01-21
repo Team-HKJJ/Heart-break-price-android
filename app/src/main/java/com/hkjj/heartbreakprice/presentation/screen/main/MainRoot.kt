@@ -10,7 +10,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -23,6 +22,7 @@ import com.hkjj.heartbreakprice.presentation.screen.notification.NotificationRoo
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
 import com.hkjj.heartbreakprice.presentation.screen.setting.SettingRoot
 import com.hkjj.heartbreakprice.presentation.screen.wish.WishRoot
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -49,14 +49,14 @@ fun MainRoot(
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = Color.White,
-                    titleContentColor = Color.Black
+                    containerColor = AppColors.White,
+                    titleContentColor = AppColors.Gray900
                 )
             )
         },
         bottomBar = {
             NavigationBar(
-                containerColor = Color.White
+                containerColor = AppColors.White
             ) {
                 items.forEach { (route, icon, label) ->
                     NavigationBarItem(

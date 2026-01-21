@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hkjj.heartbreakprice.presentation.component.TargetPriceDialog
 import com.hkjj.heartbreakprice.presentation.component.WishCard
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun WishScreen(
@@ -54,17 +55,17 @@ fun WishScreen(
                 Icons.Default.Notifications,
                 contentDescription = "Empty",
                 modifier = Modifier.size(64.dp),
-                tint = Color.LightGray
+                tint = AppColors.Gray300
             )
             Spacer(modifier = Modifier.height(16.dp))
             Text("즐겨찾기가 비어있습니다", style = MaterialTheme.typography.titleMedium)
-            Text("검색 페이지에서 상품을 즐겨찾기에 추가해보세요", color = Color.Gray)
+            Text("검색 페이지에서 상품을 즐겨찾기에 추가해보세요", color = AppColors.Gray500)
         }
     } else {
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .background(Color(0xFFF9FAFB))
+                .background(AppColors.Background)
                 .padding(16.dp)
         ) {
             Text(
@@ -74,7 +75,7 @@ fun WishScreen(
             )
             Text(
                 text = "총 ${state.wishProducts.size}개의 상품을 추적하고 있습니다",
-                color = Color.Gray,
+                color = AppColors.Gray500,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
             )
@@ -90,9 +91,9 @@ fun WishScreen(
                         },
                         targetPriceText = if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
                         targetPriceColor = if (product.price <= product.targetPrice) {
-                            Color(0xFF22C55E)
+                            AppColors.Success
                         } else {
-                            Color(0xFF3B82F6)
+                            AppColors.Primary
                         },
                         onTargetPriceButtonClick = { onAction(WishAction.OnShowDialog(product.id)) }
                     )
