@@ -6,46 +6,59 @@ import com.google.firebase.firestore.Query
 import com.hkjj.heartbreakprice.data.data_source.NotificationHistoryDataSource
 import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.domain.model.NotificationType
+import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
 
 class RemoteNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
     private val auth = FirebaseAuth.getInstance()
     private val firestore = FirebaseFirestore.getInstance("heart-break-price")
 
-    override suspend fun getAllNotificationHistories(): List<Notification> {
-        val uid = auth.currentUser?.uid ?: return emptyList()
+    override fun getAllNotificationHistories(): Flow<List<Notification>> = callbackFlow {
+        val uid = auth.currentUser?.uid
+        if (uid == null) {
+            trySend(emptyList())
+            close()
+            return@callbackFlow
+        }
 
-        return try {
-            val snapshot = firestore.collection("Users")
-                .document(uid)
-                .collection("Notifications")
-                .orderBy("timestamp", Query.Direction.DESCENDING)
-                .get()
-                .await()
-
-            snapshot.documents.mapNotNull { doc ->
-                val typeStr = doc.getString("type") ?: return@mapNotNull null
-                val type = try {
-                    NotificationType.valueOf(typeStr)
-                } catch (e: Exception) {
-                    NotificationType.PRICE_DROP // 기본값
+        val listenerRegistration = firestore.collection("Users")
+            .document(uid)
+            .collection("Notifications")
+            .orderBy("timestamp", Query.Direction.DESCENDING)
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    close(error)
+                    return@addSnapshotListener
                 }
 
-                Notification(
-                    id = doc.id,
-                    type = type,
-                    productName = doc.getString("productName") ?: "",
-                    productImage = doc.getString("productImage") ?: "",
-                    message = doc.getString("message") ?: "",
-                    timestamp = doc.getDate("timestamp") ?: java.util.Date(),
-                    isRead = doc.getBoolean("isRead") ?: false,
-                    oldPrice = doc.getLong("oldPrice")?.toInt(),
-                    newPrice = doc.getLong("newPrice")?.toInt()
-                )
+                if (snapshot != null) {
+                    val notifications = snapshot.documents.mapNotNull { doc ->
+                        val typeStr = doc.getString("type") ?: return@mapNotNull null
+                        val type = try {
+                            NotificationType.valueOf(typeStr)
+                        } catch (e: Exception) {
+                            NotificationType.PRICE_DROP // 기본값
+                        }
+
+                        Notification(
+                            id = doc.id,
+                            type = type,
+                            productName = doc.getString("productName") ?: "",
+                            productImage = doc.getString("productImage") ?: "",
+                            message = doc.getString("message") ?: "",
+                            timestamp = doc.getDate("timestamp") ?: java.util.Date(),
+                            isRead = doc.getBoolean("isRead") ?: false,
+                            oldPrice = doc.getLong("oldPrice")?.toInt(),
+                            newPrice = doc.getLong("newPrice")?.toInt()
+                        )
+                    }
+                    trySend(notifications)
+                }
             }
-        } catch (e: Exception) {
-            emptyList()
-        }
+
+        awaitClose { listenerRegistration.remove() }
     }
 
     override suspend fun readAsMarkNotification(id: String) {

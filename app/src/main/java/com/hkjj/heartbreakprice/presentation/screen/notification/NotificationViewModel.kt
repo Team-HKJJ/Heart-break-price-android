@@ -13,6 +13,7 @@ import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -32,7 +33,7 @@ class NotificationViewModel(
     val event = _event.receiveAsFlow()
 
     init {
-        fetchNotificationHistories()
+        observeNotificationHistories()
         fetchPushStatus()
     }
 
@@ -45,30 +46,28 @@ class NotificationViewModel(
         }
     }
 
-    private fun fetchNotificationHistories() {
+    private fun observeNotificationHistories() {
         _uiState.update { it.copy(isLoading = true) }
 
         viewModelScope.launch {
-            val result = getNotificationHistoryUseCase()
-            when (result) {
-                is Result.Success<List<Notification>> -> {
+            getNotificationHistoryUseCase()
+                .catch { e ->
                     _uiState.update {
                         it.copy(
-                            notifications = result.data,
+                            errorMessage = e.message,
+                            isLoading = false
+                        )
+                    }
+                    _event.send(NotificationEvent.ShowError(e.message ?: "Unknown error"))
+                }
+                .collect { notifications ->
+                    _uiState.update {
+                        it.copy(
+                            notifications = notifications,
                             isLoading = false
                         )
                     }
                 }
-                is Result.Error -> {
-                    _uiState.update {
-                        it.copy(
-                            errorMessage = result.error.message,
-                            isLoading = false
-                        )
-                    }
-                    _event.send(NotificationEvent.ShowError(result.error.message ?: "Unknown error"))
-                }
-            }
         }
     }
 
@@ -108,13 +107,7 @@ class NotificationViewModel(
             val result = readAsMarkNotificationUseCase(id)
             when (result) {
                 is Result.Success -> {
-                    _uiState.update { state ->
-                        state.copy(
-                            notifications = state.notifications.map {
-                                if (it.id == id) it.copy(isRead = true) else it
-                            }
-                        )
-                    }
+                    // No need for manual update as flow will trigger
                 }
                 is Result.Error -> {
                     _event.send(NotificationEvent.ShowError(result.error.message ?: "Failed to mark as read"))
@@ -141,19 +134,14 @@ class NotificationViewModel(
             if (hasError) {
                 _event.send(NotificationEvent.ShowError("Failed to mark some notifications as read"))
             }
-
-            // Optimistically update UI or re-fetch?
-            // Optimistic update for better UX:
-            _uiState.update { state ->
-                state.copy(
-                    notifications = state.notifications.map { it.copy(isRead = true) }
-                )
-            }
+            // Flow will update UI
         }
     }
 
     private fun deleteNotification(id: String) {
         viewModelScope.launch {
+            val deletedNotification = _uiState.value.notifications.find { it.id == id }
+
             // Optimistically remove from UI
             _uiState.update { state ->
                 state.copy(
@@ -164,9 +152,16 @@ class NotificationViewModel(
             // Perform deletion in backend
             val result = deleteNotificationUseCase(id)
             if (result is Result.Error) {
-                // Revert or show error if needed. For now, we'll just show an error message.
-                // Re-fetching might be safer to sync state.
-                fetchNotificationHistories()
+                // Revert on error
+                if (deletedNotification != null) {
+                    _uiState.update { state ->
+                        // Add back at the correct position or just add to top/bottom?
+                        // Since flow is sorted by timestamp, maybe just adding it back and sorting?
+                        // Or just appending and letting next flow emission fix order.
+                        // Simple append:
+                        state.copy(notifications = (state.notifications + deletedNotification).sortedByDescending { it.timestamp })
+                    }
+                }
                 _event.send(NotificationEvent.ShowError(result.error.message ?: "알림 삭제에 실패했습니다."))
             }
         }
