@@ -1,11 +1,12 @@
 package com.hkjj.heartbreakprice.domain.repository
 
 import com.hkjj.heartbreakprice.domain.model.Notification
+import kotlinx.coroutines.flow.Flow
 
 interface NotificationHistoryRepository {
-    suspend fun getAllNotificationHistories(): List<Notification>
+    fun getAllNotificationHistories(): Flow<List<Notification>>
 
-    suspend fun getUnreadNotificationHistories(): List<Notification>
+    fun getUnreadNotificationHistories(): Flow<List<Notification>>
 
     suspend fun readAsMarkNotification(notificationId: String)
 

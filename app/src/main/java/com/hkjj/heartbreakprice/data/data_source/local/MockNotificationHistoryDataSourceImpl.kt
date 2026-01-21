@@ -3,6 +3,8 @@ package com.hkjj.heartbreakprice.data.data_source.local
 import com.hkjj.heartbreakprice.data.data_source.NotificationHistoryDataSource
 import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.domain.model.NotificationType
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.util.Date
 
 class MockNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
@@ -43,8 +45,8 @@ class MockNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
         )
     )
 
-    override suspend fun getAllNotificationHistories(): List<Notification> {
-        return mockNotifications
+    override fun getAllNotificationHistories(): Flow<List<Notification>> = flow {
+        emit(mockNotifications)
     }
 
     override suspend fun readAsMarkNotification(id: String) {
