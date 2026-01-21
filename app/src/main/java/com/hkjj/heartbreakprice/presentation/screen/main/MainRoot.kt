@@ -1,12 +1,22 @@
 package com.hkjj.heartbreakprice.presentation.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -29,6 +39,7 @@ import com.hkjj.heartbreakprice.ui.AppColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainRoot(
+    initialTab: String? = null,
     bottomNavController: NavHostController = rememberNavController(),
     onNavigationAction: (NavigationAction) -> Unit
 ) {
@@ -103,7 +114,7 @@ fun MainRoot(
     ) { innerPadding ->
         NavHost(
             navController = bottomNavController,
-            startDestination = "search",
+            startDestination = initialTab ?: "search",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("search") { SearchRoot() }

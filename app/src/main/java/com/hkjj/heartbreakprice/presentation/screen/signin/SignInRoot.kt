@@ -19,7 +19,7 @@ fun SignInRoot(
         viewModel.event.collectLatest { event ->
             when (event) {
                 is SignInEvent.NavigateToMain -> {
-                    onNavigationAction(NavigationAction.NavigateToMain)
+                    onNavigationAction(NavigationAction.NavigateToMain())
                 }
                 is SignInEvent.NavigateToSignUp -> {
                     onNavigationAction(NavigationAction.NavigateToSignUp)

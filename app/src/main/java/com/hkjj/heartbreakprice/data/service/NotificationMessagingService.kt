@@ -71,7 +71,7 @@ class NotificationMessagingService : FirebaseMessagingService(), KoinComponent {
         // 알림 클릭 시 앱 실행을 위한 Intent
         val intent = Intent(this, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-            putExtra("navigate_to", "wish")
+            putExtra("navigate_to", "notification")
         }
         val pendingIntent = PendingIntent.getActivity(
             this,
