@@ -86,7 +86,13 @@ fun MainRoot(
             composable("search") { SearchRoot() }
             composable("wish") { WishRoot() }
             composable("notification") { NotificationRoot() }
-            composable("settings") { SettingRoot(onLogout = { }) }
+            composable("settings") {
+                SettingRoot(
+                    onLogout = {
+                        onNavigationAction(NavigationAction.NavigateToSignIn)
+                    }
+                )
+            }
         }
     }
 }

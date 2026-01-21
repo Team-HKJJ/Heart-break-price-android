@@ -29,7 +29,11 @@ fun NavigationRoot(
         viewModel.event.collectLatest { event ->
             when (event) {
                 is NavigationEvent.NavigateTo -> {
-                    navController.navigate(event.route)
+                    navController.navigate(event.route) {
+                        if (event.route is Route.SignIn) {
+                            popUpTo(0) { inclusive = true }
+                        }
+                    }
                 }
                 is NavigationEvent.NavigateBack -> {
                     navController.popBackStack()

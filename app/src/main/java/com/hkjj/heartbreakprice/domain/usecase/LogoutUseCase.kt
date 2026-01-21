@@ -8,6 +8,11 @@ class LogoutUseCase(
 ) {
     suspend operator fun invoke(): Result<Unit, Exception> {
         return try {
+            try {
+                authRepository.updateFcmToken("")
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
             authRepository.logout()
             Result.Success(Unit)
         } catch (e: Exception) {
