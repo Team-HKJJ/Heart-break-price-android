@@ -20,7 +20,7 @@ class SearchLocalDataSourceImpl(
     }
 
     override suspend fun saveLastSearchTerm(term: String) = withContext(Dispatchers.IO) {
-        prefs.edit {
+        prefs.edit(commit = true) {
             putString(KEY_LAST_SEARCH_TERM, term)
         }
     }

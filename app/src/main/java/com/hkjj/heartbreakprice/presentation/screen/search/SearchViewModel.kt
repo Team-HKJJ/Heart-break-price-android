@@ -14,6 +14,8 @@ import com.hkjj.heartbreakprice.domain.usecase.DeleteWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetWishesUseCase
 import com.hkjj.heartbreakprice.domain.usecase.SaveLastSearchTermUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetLastSearchTermUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 
 import kotlinx.coroutines.flow.update
 
@@ -42,7 +44,7 @@ class SearchViewModel(
                 _uiState.update { it.copy(searchTerm = defaultTerm) }
                 defaultTerm
             }
-            
+
             val result = getSearchedProductUseCase(termToSearch)
             if (result is Result.Success) {
                 allProducts = result.data
@@ -50,11 +52,11 @@ class SearchViewModel(
                 updateFilteredProducts()
             }
         }
-        
+
         // 찜 목록 실시간 관찰
         viewModelScope.launch {
             getWishesUseCase().collect { wishes ->
-                _uiState.update { 
+                _uiState.update {
                     it.copy(favoriteProductIds = wishes.map { wish -> wish.id }.toSet())
                 }
             }
@@ -95,13 +97,16 @@ class SearchViewModel(
                     }
                 }
             }
+
             is SearchAction.CategoryClick -> {
                 _uiState.value = _uiState.value.copy(selectedCategory = action.category)
                 updateFilteredProducts()
             }
+
             is SearchAction.OnChangeSearchTerm -> {
                 _uiState.value = _uiState.value.copy(searchTerm = action.searchTerm)
             }
+
             is SearchAction.OnSearch -> {
                 viewModelScope.launch {
                     val term = _uiState.value.searchTerm
@@ -117,11 +122,12 @@ class SearchViewModel(
     }
 
     override fun onCleared() {
-        super.onCleared()
-        // ViewModel 소멸 시(또는 화면 종료 시) 마지막 검색어 저장
-        viewModelScope.launch {
+        // super.onCleared() 호출 전에 실행하여 scope가 아직 유효한 상태에서 시작되도록 함
+        // NonCancellable을 사용하여 ViewModel이 소멸되어도 저장이 완료되도록 보장
+        viewModelScope.launch(Dispatchers.IO + NonCancellable) {
             saveLastSearchTermUseCase(_uiState.value.searchTerm)
         }
+        super.onCleared()
     }
 
     private fun updateCategories() {
