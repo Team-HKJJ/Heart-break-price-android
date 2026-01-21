@@ -5,9 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.hkjj.heartbreakprice.domain.usecase.GetSearchedProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.hkjj.heartbreakprice.core.Result
 import com.hkjj.heartbreakprice.domain.model.Product
@@ -15,6 +12,10 @@ import com.hkjj.heartbreakprice.domain.model.WishProduct
 import com.hkjj.heartbreakprice.domain.usecase.AddWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.DeleteWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetWishesUseCase
+import com.hkjj.heartbreakprice.domain.usecase.SaveLastSearchTermUseCase
+import com.hkjj.heartbreakprice.domain.usecase.GetLastSearchTermUseCase
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 
 import kotlinx.coroutines.flow.update
 
@@ -22,7 +23,9 @@ class SearchViewModel(
     private val getSearchedProductUseCase: GetSearchedProductUseCase,
     private val addWishUseCase: AddWishUseCase,
     private val deleteWishUseCase: DeleteWishUseCase,
-    private val getWishesUseCase: GetWishesUseCase
+    private val getWishesUseCase: GetWishesUseCase,
+    private val saveLastSearchTermUseCase: SaveLastSearchTermUseCase,
+    private val getLastSearchTermUseCase: GetLastSearchTermUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
@@ -30,20 +33,30 @@ class SearchViewModel(
     private var allProducts: List<Product> = emptyList()
 
     init {
-        // 초기 로딩 시 전체 상품을 가져옵니다.
+        // 초기 로딩 시 마지막 검색어 확인 및 검색
         viewModelScope.launch {
-            val result = getSearchedProductUseCase("")
+            val lastTerm = getLastSearchTermUseCase()
+            val termToSearch = if (!lastTerm.isNullOrBlank()) {
+                _uiState.update { it.copy(searchTerm = lastTerm) }
+                lastTerm
+            } else {
+                val defaultTerm = "새싹"
+                _uiState.update { it.copy(searchTerm = defaultTerm) }
+                defaultTerm
+            }
+
+            val result = getSearchedProductUseCase(termToSearch)
             if (result is Result.Success) {
                 allProducts = result.data
                 updateCategories()
                 updateFilteredProducts()
             }
         }
-        
+
         // 찜 목록 실시간 관찰
         viewModelScope.launch {
             getWishesUseCase().collect { wishes ->
-                _uiState.update { 
+                _uiState.update {
                     it.copy(favoriteProductIds = wishes.map { wish -> wish.id }.toSet())
                 }
             }
@@ -84,16 +97,20 @@ class SearchViewModel(
                     }
                 }
             }
+
             is SearchAction.CategoryClick -> {
                 _uiState.value = _uiState.value.copy(selectedCategory = action.category)
                 updateFilteredProducts()
             }
+
             is SearchAction.OnChangeSearchTerm -> {
                 _uiState.value = _uiState.value.copy(searchTerm = action.searchTerm)
             }
+
             is SearchAction.OnSearch -> {
                 viewModelScope.launch {
-                    val result = getSearchedProductUseCase(_uiState.value.searchTerm)
+                    val term = _uiState.value.searchTerm
+                    val result = getSearchedProductUseCase(term)
                     if (result is Result.Success) {
                         allProducts = result.data
                         updateCategories()
@@ -102,6 +119,15 @@ class SearchViewModel(
                 }
             }
         }
+    }
+
+    override fun onCleared() {
+        // super.onCleared() 호출 전에 실행하여 scope가 아직 유효한 상태에서 시작되도록 함
+        // NonCancellable을 사용하여 ViewModel이 소멸되어도 저장이 완료되도록 보장
+        viewModelScope.launch(Dispatchers.IO + NonCancellable) {
+            saveLastSearchTermUseCase(_uiState.value.searchTerm)
+        }
+        super.onCleared()
     }
 
     private fun updateCategories() {

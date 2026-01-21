@@ -36,7 +36,9 @@ val viewModelModule = module {
             getSearchedProductUseCase = get(),
             addWishUseCase = get(),
             deleteWishUseCase = get(),
-            getWishesUseCase = get()
+            getWishesUseCase = get(),
+            saveLastSearchTermUseCase = get(),
+            getLastSearchTermUseCase = get()
         )
     }
     

@@ -14,8 +14,13 @@ import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
+import com.hkjj.heartbreakprice.data.data_source.local.SearchLocalDataSourceImpl
+import com.hkjj.heartbreakprice.data.data_source.SearchLocalDataSource
+import org.koin.android.ext.koin.androidContext
 
 val datasourceModule = module {
+    single<SearchLocalDataSource> { SearchLocalDataSourceImpl(androidContext()) }
+
     if (BuildConfig.FLAVOR == "prod") {
         single<NotificationHistoryDataSource> { RemoteNotificationHistoryDataSourceImpl() }
         single {

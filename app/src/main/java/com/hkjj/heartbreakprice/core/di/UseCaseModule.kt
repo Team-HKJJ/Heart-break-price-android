@@ -16,6 +16,8 @@ import com.hkjj.heartbreakprice.domain.usecase.SignUpUseCase
 import com.hkjj.heartbreakprice.domain.usecase.UpdateFcmTokenUseCase
 import com.hkjj.heartbreakprice.domain.usecase.UpdateTargetPriceUseCase
 import org.koin.dsl.module
+import com.hkjj.heartbreakprice.domain.usecase.GetLastSearchTermUseCase
+import com.hkjj.heartbreakprice.domain.usecase.SaveLastSearchTermUseCase
 
 val usecaseModule = module {
     factory { GetSearchedProductUseCase(get()) }
@@ -33,4 +35,6 @@ val usecaseModule = module {
     factory { GetSignInStatusUseCase(get()) }
     factory { DeleteFcmTokenUseCase(get()) }
     factory { UpdateTargetPriceUseCase(get()) }
+    factory { SaveLastSearchTermUseCase(get()) }
+    factory { GetLastSearchTermUseCase(get()) }
 }
