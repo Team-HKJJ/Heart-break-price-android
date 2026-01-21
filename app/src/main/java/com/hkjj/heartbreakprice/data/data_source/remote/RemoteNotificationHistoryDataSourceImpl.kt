@@ -18,7 +18,7 @@ class RemoteNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
         return try {
             val snapshot = firestore.collection("Users")
                 .document(uid)
-                .collection("notifications")
+                .collection("Notification")
                 .orderBy("timestamp", Query.Direction.DESCENDING)
                 .get()
                 .await()
@@ -53,7 +53,7 @@ class RemoteNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
         try {
             firestore.collection("Users")
                 .document(uid)
-                .collection("notifications")
+                .collection("Notification")
                 .document(id)
                 .update("isRead", true)
                 .await()
@@ -67,7 +67,7 @@ class RemoteNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
         try {
             firestore.collection("Users")
                 .document(uid)
-                .collection("notifications")
+                .collection("Notification")
                 .document(id)
                 .delete()
                 .await()
