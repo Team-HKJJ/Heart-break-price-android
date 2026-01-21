@@ -10,6 +10,8 @@ import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -18,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.hkjj.heartbreakprice.presentation.component.EmptyNotificationItem
 import com.hkjj.heartbreakprice.presentation.component.NotificationItem
 import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun NotificationScreen(
@@ -43,14 +46,14 @@ fun NotificationScreen(
         ) {
             Column {
                 Text(
-                    text = "알림",
+                    text = stringResource(R.string.notification_title),
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = AppColors.Gray900
                 )
                 if (unreadCount > 0) {
                     Text(
-                        text = "읽지 않은 알림 ${unreadCount}개",
+                        text = pluralStringResource(R.plurals.notification_unread_count, unreadCount, unreadCount),
                         style = MaterialTheme.typography.bodyMedium,
                         color = AppColors.Primary,
                         fontWeight = FontWeight.Medium
@@ -62,7 +65,7 @@ fun NotificationScreen(
                     onClick = { onAction(NotificationAction.MarkAllAsRead) },
                     colors = ButtonDefaults.textButtonColors(contentColor = AppColors.Primary)
                 ) {
-                    Text("모두 읽음", fontWeight = FontWeight.Bold)
+                    Text(stringResource(R.string.notification_mark_all_read), fontWeight = FontWeight.Bold)
                 }
             }
         }
@@ -79,7 +82,7 @@ fun NotificationScreen(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(
-                text = "푸시 알림 받기",
+                text = stringResource(R.string.notification_push_toggle),
                 style = MaterialTheme.typography.bodyMedium,
                 fontWeight = FontWeight.Medium
             )

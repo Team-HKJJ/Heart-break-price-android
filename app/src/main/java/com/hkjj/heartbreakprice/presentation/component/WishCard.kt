@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,6 +46,7 @@ import com.hkjj.heartbreakprice.domain.model.WishProduct
 import java.text.NumberFormat
 import java.util.Locale
 import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun WishCard(
@@ -85,7 +87,7 @@ fun WishCard(
                                 .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = "$discount% 할인",
+                                text = stringResource(R.string.wish_discount, discount),
                                 color = AppColors.White,
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold
@@ -147,11 +149,11 @@ fun WishCard(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Price
-                Text("현재가", style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
+                Text(stringResource(R.string.wish_current_price), style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     wishProduct.originalPrice?.let {
                         Text(
-                            text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(it)}원",
+                            text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(it)),
                             style = MaterialTheme.typography.bodySmall,
                             color = AppColors.Gray500,
                             textDecoration = TextDecoration.LineThrough
@@ -159,7 +161,7 @@ fun WishCard(
                         Spacer(modifier = Modifier.width(4.dp))
                     }
                     Text(
-                        text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.price)}원",
+                        text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(wishProduct.price)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -167,9 +169,9 @@ fun WishCard(
 
                 if (wishProduct.targetPrice != null) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("목표가", style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
+                    Text(stringResource(R.string.wish_target_price), style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
                     Text(
-                        text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.targetPrice)}원",
+                        text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(wishProduct.targetPrice)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = AppColors.Primary
@@ -194,14 +196,14 @@ fun WishCard(
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text("수정", fontSize = 12.sp)
+                            Text(stringResource(R.string.wish_action_edit), fontSize = 12.sp)
                         } else {
                             Icon(
                                 Icons.Default.NotificationsOff,
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text("목표가", fontSize = 12.sp)
+                            Text(stringResource(R.string.wish_action_set_target), fontSize = 12.sp)
                         }
                     }
 

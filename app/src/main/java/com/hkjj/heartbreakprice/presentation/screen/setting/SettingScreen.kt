@@ -29,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import com.hkjj.heartbreakprice.domain.model.SettingItem
 import com.hkjj.heartbreakprice.presentation.component.SettingsSection
 import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun SettingScreen(
@@ -93,10 +95,10 @@ fun SettingScreen(
 
         // Account Settings
         SettingsSection(
-            title = "계정 설정",
+            title = stringResource(R.string.settings_account),
             items = listOf(
-                SettingItem("프로필 수정", Icons.Default.Person),
-                SettingItem("비밀번호 변경", Icons.Default.Security)
+                SettingItem(stringResource(R.string.settings_profile_edit), Icons.Default.Person),
+                SettingItem(stringResource(R.string.settings_password_change), Icons.Default.Security)
             )
         )
 
@@ -104,10 +106,10 @@ fun SettingScreen(
 
         // Notification Settings
         SettingsSection(
-            title = "알림 설정",
+            title = stringResource(R.string.settings_notification),
             items = listOf(
-                SettingItem("가격 알림", Icons.Default.Notifications, "켜짐"),
-                SettingItem("마케팅 알림", Icons.Default.Notifications, "꺼짐")
+                SettingItem(stringResource(R.string.settings_price_notification), Icons.Default.Notifications, stringResource(R.string.settings_on)),
+                SettingItem(stringResource(R.string.settings_marketing_notification), Icons.Default.Notifications, stringResource(R.string.settings_off))
             )
         )
 
@@ -115,11 +117,11 @@ fun SettingScreen(
 
         // App Info
         SettingsSection(
-            title = "앱 정보",
+            title = stringResource(R.string.settings_app_info),
             items = listOf(
-                SettingItem("고객 지원", Icons.Default.Info),
-                SettingItem("이용약관", Icons.Default.Info),
-                SettingItem("버전 1.0.0", Icons.Default.Info, showArrow = false)
+                SettingItem(stringResource(R.string.settings_support), Icons.Default.Info),
+                SettingItem(stringResource(R.string.settings_terms), Icons.Default.Info),
+                SettingItem(stringResource(R.string.settings_version, "1.0.0"), Icons.Default.Info, showArrow = false)
             )
         )
 
@@ -135,7 +137,7 @@ fun SettingScreen(
         ) {
             Icon(Icons.Default.ExitToApp, contentDescription = null)
             Spacer(modifier = Modifier.width(8.dp))
-            Text("로그아웃")
+            Text(stringResource(R.string.settings_logout))
         }
 
         Spacer(modifier = Modifier.height(32.dp))

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
@@ -22,6 +23,7 @@ import com.hkjj.heartbreakprice.domain.model.Product
 import java.text.NumberFormat
 import java.util.*
 import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun ProductItem(
@@ -79,7 +81,7 @@ fun ProductItem(
                                 .padding(horizontal = 6.dp, vertical = 2.dp)
                         ) {
                             Text(
-                                text = "$discount%",
+                                text = stringResource(R.string.product_discount, discount),
                                 color = AppColors.Accent,
                                 style = MaterialTheme.typography.labelSmall,
                                 fontWeight = FontWeight.Bold
@@ -112,14 +114,14 @@ fun ProductItem(
                     Column {
                         product.originalPrice?.let {
                             Text(
-                                text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(it)}원",
+                                text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(it)),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = AppColors.Gray500,
                                 textDecoration = TextDecoration.LineThrough
                             )
                         }
                         Text(
-                            text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(product.price)}원",
+                            text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(product.price)),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold
                         )
@@ -141,7 +143,7 @@ fun ProductItem(
                     ) {
                         Icon(
                             imageVector = Icons.Default.Favorite,
-                            contentDescription = "Favorite",
+                            contentDescription = stringResource(R.string.product_favorite),
                             tint = if (isFavorite) AppColors.White else AppColors.Gray400,
                             modifier = Modifier.size(18.dp)
                         )

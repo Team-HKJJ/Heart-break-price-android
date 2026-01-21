@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">심쿵가</string>
+    <string name="app_tagline">원하는 가격에 상품을 구매하세요</string>
+    <string name="nav_search">검색</string>
+    <string name="nav_wish">즐겨찾기</string>
+    <string name="nav_notification">알림</string>
+    <string name="nav_settings">설정</string>
+
+    <string name="notification_title">알림</string>
+
+    <plurals name="notification_unread_count">
+        <item quantity="one">읽지 않은 알림 %d개</item>
+        <item quantity="other">읽지 않은 알림 %d개</item>
+    </plurals>
+
+    <string name="notification_mark_all_read">모두 읽음 표시</string>
+
+    <string name="notification_push_toggle">푸시 알림 받기</string>
+
+    <string name="search_placeholder">상품명을 검색하세요...</string>
+
+    <string name="search_icon_description">검색</string>
+
+    <string name="search_empty_result">검색 결과가 없습니다.</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_account">계정 설정</string>
+    <string name="settings_profile_edit">프로필 수정</string>
+    <string name="settings_password_change">비밀번호 변경</string>
+
+    <string name="settings_notification">알림 설정</string>
+    <string name="settings_price_notification">가격 알림</string>
+    <string name="settings_marketing_notification">마케팅 알림</string>
+
+    <string name="settings_on">켜짐</string>
+    <string name="settings_off">꺼짐</string>
+
+    <string name="settings_app_info">앱 정보</string>
+    <string name="settings_support">고객 지원</string>
+    <string name="settings_terms">이용약관</string>
+
+    <string name="settings_version">버전 %1$s</string>
+
+    <string name="settings_logout">로그아웃</string>
+
+    <!-- Sign In -->
+    <string name="sign_in_title">로그인</string>
+    <string name="sign_in_loading">로그인 중...</string>
+
+    <string name="sign_in_email_label">이메일</string>
+    <string name="sign_in_email_placeholder">이메일을 입력하세요.</string>
+    <string name="sign_in_email_hint">example@email.com</string>
+
+    <string name="sign_in_password_label">비밀번호</string>
+    <string name="sign_in_password_placeholder">비밀번호를 입력하세요.</string>
+    <string name="sign_in_password_hint">••••••••</string>
+
+    <string name="sign_in_no_account">계정이 없으신가요?</string>
+    <string name="sign_in_sign_up">회원가입</string>
+
+    <!-- Demo -->
+    <string name="sign_in_demo_title">데모 계정으로 로그인</string>
+    <string name="sign_in_demo_email">이메일: %1$s</string>
+    <string name="sign_in_demo_password">비밀번호: %1$s</string>
+
+    <!-- Auth Common -->
+    <string name="sign_in">로그인</string>
+    <string name="sign_up">회원가입</string>
+    <string name="sign_up_title">계정을 만들고 시작하세요</string>
+
+    <!-- Sign Up -->
+    <string name="sign_up_success">회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...</string>
+    <string name="name">이름</string>
+    <string name="sign_up_name_placeholder">이름을 입력하세요.</string>
+    <string name="name_hint">홍길동</string>
+
+    <string name="email">이메일</string>
+    <string name="email_hint">example@email.com</string>
+
+    <string name="password">비밀번호</string>
+    <string name="password_hint">••••••••</string>
+    <string name="password_rule">최소 6자 이상</string>
+
+    <string name="confirm_password">비밀번호 확인</string>
+    <string name="sign_up_confirm_password_placeholder">동일한 비밀번호를 입력해주세요.</string>
+
+    <string name="signing_up">가입 중...</string>
+    <string name="sign_up_done">완료!</string>
+
+    <string name="already_have_account">이미 계정이 있으신가요?</string>
+
+    <!-- Wish / Favorites -->
+    <string name="wish_empty_title">즐겨찾기가 비어있습니다</string>
+    <string name="wish_empty_desc">검색 페이지에서 상품을 즐겨찾기에 추가해보세요</string>
+
+    <string name="wish_title">즐겨찾기</string>
+    <string name="wish_tracking_count">총 %1$d개의 상품을 추적하고 있습니다</string>
+
+    <string name="wish_target_reached">목표가 도달</string>
+    <string name="wish_tracking">추적중</string>
+
+    <string name="wish_empty_icon_desc">Empty favorites</string>
+
+    <string name="notification_empty_title">알림이 없습니다</string>
+    <string name="notification_empty_desc">
+        상품을 즐겨찾기하고 목표가를 설정하면\n가격 변동 알림을 받을 수 있습니다.
+    </string>
+    <string name="notification_empty_icon_desc">No notifications</string>
+
+    <!-- Notification Actions -->
+    <string name="notification_mark_as_read">읽음 표시</string>
+    <string name="notification_delete">삭제</string>
+
+    <!-- Notification Type Messages -->
+    <string name="notification_discount">%1$d%% 할인</string>
+
+    <!-- Notification Icon Descriptions -->
+    <string name="notification_icon_price_drop">가격 하락 알림</string>
+    <string name="notification_icon_target_reached">목표가 도달 알림</string>
+    <string name="notification_icon_back_in_stock">재입고 알림</string>
+
+    <!-- Notification Time -->
+    <string name="notification_time_icon_desc">알림 시간</string>
+
+    <!-- Price -->
+    <string name="price_won_format">%1$d원</string>
+
+    <!-- Product -->
+    <string name="product_discount">%1$d%% 할인</string>
+    <string name="product_favorite">즐겨찾기</string>
+
+    <!-- Price -->
+    <string name="price_won">%1$s원</string>
+
+    <!-- Target Price Dialog -->
+    <string name="target_price_title">목표 가격 설정</string>
+
+    <string name="target_price_product_name_label">상품명</string>
+    <string name="target_price_current_price_label">현재가</string>
+
+    <string name="target_price_input_label">목표 가격</string>
+    <string name="target_price_input_placeholder">예: 300000</string>
+    <string name="target_price_description">
+        이 가격 이하로 할인되면 알림을 받습니다
+    </string>
+
+    <string name="action_cancel">취소</string>
+    <string name="action_save">저장</string>
+
+    <!-- Wish Card -->
+    <string name="wish_discount">%1$d%% 할인</string>
+
+    <string name="wish_current_price">현재가</string>
+    <string name="wish_target_price">목표가</string>
+
+    <string name="wish_action_edit">수정</string>
+    <string name="wish_action_set_target">목표가</string>
+    <string name="wish_action_delete">삭제</string>
+
+    <string name="price_format">%1$s원</string>
+
+    <!-- Permission -->
+    <string name="permission_title">알림 권한 필요</string>
+    <string name="permission_desc">상품 가격 하락 알림을 받기 위해서는 알림 권한이 필요합니다. 설정 화면에서 권한을 허용해 주세요.</string>
+    <string name="permission_go_to_settings">설정으로 이동</string>
+</resources>
