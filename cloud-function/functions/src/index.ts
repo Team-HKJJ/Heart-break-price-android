@@ -1,7 +1,9 @@
 import * as admin from "firebase-admin";
 import {getFirestore} from "firebase-admin/firestore";
 import {onSchedule} from "firebase-functions/v2/scheduler";
-import {NAVER_CLIENT_ID, NAVER_CLIENT_SECRET} from "./params";
+import {NAVER_CLIENT_ID,
+  NAVER_CLIENT_SECRET,
+} from "./params";
 
 admin.initializeApp();
 const db = getFirestore("heart-break-price");
@@ -79,6 +81,39 @@ async function fetchProductFromNaver(
 }
 
 /**
+ * 디스코드 웹훅으로 알림 전송 결과를 전송한다.
+ *
+ * @param {number} totalGenerated 생성된 알림(DB 저장) 수
+ * @param {number} totalSent 성공적으로 전송된 FCM 수
+ * @param {number} totalFailed 전송 실패한 FCM 수
+ */
+async function sendDiscordWebhook(
+  totalGenerated: number,
+  totalSent: number,
+  totalFailed: number
+) {
+  const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+  if (!webhookUrl) {
+    console.warn("DISCORD_WEBHOOK_URL is not set.");
+    return;
+  }
+
+  const message = {
+    content: `📢 [알림 발송 리포트]\n- 생성된 알림: ${totalGenerated}건\n- FCM 전송 성공: ${totalSent}건\n- FCM 전송 실패: ${totalFailed}건`,
+  };
+
+  try {
+    await fetch(webhookUrl, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify(message),
+    });
+  } catch (e) {
+    console.error("Failed to send Discord webhook:", e);
+  }
+}
+
+/**
  * 목표 가격에 도달한 경우 사용자에게 푸시 알림을 전송한다.
  *
  * @param {string} productId 상품 ID
@@ -86,7 +121,7 @@ async function fetchProductFromNaver(
  * @param {string} productImage 상품이미지
  * @param {number} oldPrice 원가
  * @param {number} currentPrice 현재 가격
- * @return {Promise<void>}
+ * @return {Promise<{generated: number, sent: number, failed: number}>} 결과
  */
 async function notifyUsersIfNeeded(
   productId: string,
@@ -94,7 +129,11 @@ async function notifyUsersIfNeeded(
   productImage: string,
   oldPrice: number,
   currentPrice: number
-): Promise<void> {
+): Promise<{ generated: number; sent: number; failed: number }> {
+  let generated = 0;
+  let sent = 0;
+  let failed = 0;
+
   // 1. 이 상품을 찜한 유저들의 ID 목록을 가져옴 (UserList 서브컬렉션 조회)
   const userListSnapshot = await db
     .collection("Products")
@@ -104,7 +143,7 @@ async function notifyUsersIfNeeded(
 
   // 찜한 유저가 없으면 종료
   if (userListSnapshot.empty) {
-    return;
+    return {generated, sent, failed};
   }
 
   for (const userListDoc of userListSnapshot.docs) {
@@ -156,6 +195,7 @@ async function notifyUsersIfNeeded(
         oldPrice,
         newPrice: currentPrice,
       });
+      generated++;
 
       /** 2️⃣ FCM 푸시 전송 */
       if (fcmToken) {
@@ -172,9 +212,13 @@ async function notifyUsersIfNeeded(
               newPrice: currentPrice.toString(),
             },
           });
+          sent++;
         } catch (e) {
           console.error(`Failed to send FCM to user ${userId}:`, e);
+          failed++;
         }
+      } else {
+        console.log(`User ${userId} has no FCM token. Notification saved but push skipped.`);
       }
 
       // 알림을 보냈음을 표시
@@ -185,6 +229,8 @@ async function notifyUsersIfNeeded(
     /** 3️⃣ wish 상태 업데이트 (가격은 항상 업데이트, 알림 상태는 조건부 업데이트) */
     await wishDocRef.update(updateData);
   }
+
+  return {generated, sent, failed};
 }
 
 /**
@@ -198,7 +244,14 @@ export const crawlProductPrices = onSchedule(
     timeZone: "Asia/Seoul",
   },
   async () => {
+    console.log("Crawl started");
+    const webhookUrl = process.env.DISCORD_WEBHOOK_URL;
+    console.log(`Webhook URL loaded: ${webhookUrl ? "Yes (starts with " + webhookUrl.substring(0, 5) + ")" : "No"}`);
+
     const productsSnapshot = await db.collection("Products").get();
+    let totalGenerated = 0;
+    let totalSent = 0;
+    let totalFailed = 0;
 
     for (const productDoc of productsSnapshot.docs) {
       const product = productDoc.data();
@@ -213,19 +266,32 @@ export const crawlProductPrices = onSchedule(
       const newPrice = crawlResult.price;
 
       if (newPrice !== oldPrice) {
+        console.log(`Price changed for ${productName}: ${oldPrice} -> ${newPrice}`);
         await productDoc.ref.update({
           price: newPrice,
           updatedAt: admin.firestore.FieldValue.serverTimestamp(),
         });
 
-        await notifyUsersIfNeeded(
+        const {generated, sent, failed} = await notifyUsersIfNeeded(
           productId,
           productName,
           product.image,
           oldPrice,
           newPrice
         );
+        totalGenerated += generated;
+        totalSent += sent;
+        totalFailed += failed;
       }
+    }
+
+    console.log(`Crawl finished. Generated: ${totalGenerated}, Sent: ${totalSent}, Failed: ${totalFailed}`);
+
+    if (totalGenerated > 0 || totalSent > 0 || totalFailed > 0) {
+      console.log("Sending Discord webhook...");
+      await sendDiscordWebhook(totalGenerated, totalSent, totalFailed);
+    } else {
+      console.log("No notifications generated/sent/failed. Skipping webhook.");
     }
   }
 );

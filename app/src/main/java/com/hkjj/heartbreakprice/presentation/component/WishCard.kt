@@ -1,5 +1,6 @@
 package com.hkjj.heartbreakprice.presentation.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -28,6 +29,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.stringResource
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,6 +45,8 @@ import coil.compose.AsyncImage
 import com.hkjj.heartbreakprice.domain.model.WishProduct
 import java.text.NumberFormat
 import java.util.Locale
+import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun WishCard(
@@ -53,9 +57,10 @@ fun WishCard(
     onRemove: () -> Unit,
 ) {
     Card(
-        shape = RoundedCornerShape(8.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(containerColor = AppColors.White),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = BorderStroke(1.dp, AppColors.Gray100)
     ) {
         Column {
             // Image Area
@@ -63,7 +68,7 @@ fun WishCard(
                 modifier = Modifier
                     .fillMaxWidth()
                     .aspectRatio(4f / 3f)
-                    .background(Color.Gray)
+                    .background(AppColors.Gray400)
             ) {
                 AsyncImage(
                     model = wishProduct.image,
@@ -78,14 +83,14 @@ fun WishCard(
                         val discount = ((1 - wishProduct.price.toDouble() / original) * 100).toInt()
                         Box(
                             modifier = Modifier
-                                .background(Color.Red, RoundedCornerShape(8.dp))
-                                .padding(horizontal = 6.dp)
-                                .padding(bottom = 4.dp)
+                                .background(AppColors.Accent, RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
-                                text = "$discount% 할인",
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelSmall
+                                text = stringResource(R.string.wish_discount, discount),
+                                color = AppColors.White,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -94,14 +99,14 @@ fun WishCard(
                     if (targetPriceText.isNotEmpty()) {
                         Box(
                             modifier = Modifier
-                                .background(targetPriceColor, RoundedCornerShape(8.dp))
-                                .padding(horizontal = 6.dp)
-                                .padding(bottom = 4.dp)
+                                .background(targetPriceColor, RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = targetPriceText,
-                                color = Color.White,
-                                style = MaterialTheme.typography.labelSmall
+                                color = AppColors.White,
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -113,7 +118,7 @@ fun WishCard(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Box(
                         modifier = Modifier
-                            .border(1.dp, Color.LightGray, RoundedCornerShape(4.dp))
+                            .border(1.dp, AppColors.Gray300, RoundedCornerShape(4.dp))
                             .padding(horizontal = 6.dp, vertical = 2.dp)
                     ) {
                         Text(text = wishProduct.category, style = MaterialTheme.typography.labelSmall)
@@ -123,12 +128,12 @@ fun WishCard(
                         Icons.Default.DateRange,
                         contentDescription = null,
                         modifier = Modifier.size(12.dp),
-                        tint = Color.Gray
+                        tint = AppColors.Gray500
                     )
                     Text(
                         text = wishProduct.addedDate.substring(0, 10),
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.Gray
+                        color = AppColors.Gray500
                     )
                 }
 
@@ -139,24 +144,24 @@ fun WishCard(
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )
-                Text(wishProduct.shop, style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                Text(wishProduct.shop, style = MaterialTheme.typography.bodySmall, color = AppColors.Gray500)
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Price
-                Text("현재가", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                Text(stringResource(R.string.wish_current_price), style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     wishProduct.originalPrice?.let {
                         Text(
-                            text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(it)}원",
+                            text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(it)),
                             style = MaterialTheme.typography.bodySmall,
-                            color = Color.Gray,
+                            color = AppColors.Gray500,
                             textDecoration = TextDecoration.LineThrough
                         )
                         Spacer(modifier = Modifier.width(4.dp))
                     }
                     Text(
-                        text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.price)}원",
+                        text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(wishProduct.price)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -164,12 +169,12 @@ fun WishCard(
 
                 if (wishProduct.targetPrice != null) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("목표가", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                    Text(stringResource(R.string.wish_target_price), style = MaterialTheme.typography.labelSmall, color = AppColors.Gray500)
                     Text(
-                        text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.targetPrice)}원",
+                        text = stringResource(R.string.price_format, NumberFormat.getNumberInstance(Locale.US).format(wishProduct.targetPrice)),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = AppColors.Primary
                     )
                 }
 
@@ -182,7 +187,7 @@ fun WishCard(
                         modifier = Modifier.weight(1f),
                         contentPadding = PaddingValues(0.dp),
                         colors = ButtonDefaults.outlinedButtonColors(),
-                        border = androidx.compose.foundation.BorderStroke(1.dp, Color.LightGray),
+                        border = androidx.compose.foundation.BorderStroke(1.dp, AppColors.Gray300),
                         shape = RoundedCornerShape(4.dp)
                     ) {
                         if (wishProduct.targetPrice != null) {
@@ -191,25 +196,28 @@ fun WishCard(
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text("수정", fontSize = 12.sp)
+                            Text(stringResource(R.string.wish_action_edit), fontSize = 12.sp)
                         } else {
                             Icon(
                                 Icons.Default.NotificationsOff,
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text("목표가", fontSize = 12.sp)
+                            Text(stringResource(R.string.wish_action_set_target), fontSize = 12.sp)
                         }
                     }
 
                     Button(
                         onClick = onRemove,
-                        colors = ButtonDefaults.textButtonColors(contentColor = Color.Red),
-                        modifier = Modifier.width(32.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = AppColors.Accent.copy(alpha = 0.1f),
+                            contentColor = AppColors.Accent
+                        ),
+                        modifier = Modifier.width(44.dp),
                         contentPadding = PaddingValues(0.dp),
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(8.dp)
                     ) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.size(18.dp))
                     }
                 }
             }

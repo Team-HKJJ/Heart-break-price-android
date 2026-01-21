@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.hkjj.heartbreakprice.core.routing.NavigationAction
+import androidx.compose.ui.res.stringResource
 import com.hkjj.heartbreakprice.core.routing.NavigationRoot
 import com.hkjj.heartbreakprice.core.routing.NavigationViewModel
 import com.hkjj.heartbreakprice.ui.theme.HeartBreakPriceTheme
@@ -59,19 +60,19 @@ class MainActivity : ComponentActivity() {
                 if (showPermissionDialog) {
                     AlertDialog(
                         onDismissRequest = { showPermissionDialog = false },
-                        title = { Text("알림 권한 필요") },
-                        text = { Text("상품 가격 하락 알림을 받기 위해서는 알림 권한이 필요합니다. 설정 화면에서 권한을 허용해 주세요.") },
+                        title = { Text(stringResource(R.string.permission_title)) },
+                        text = { Text(stringResource(R.string.permission_desc)) },
                         confirmButton = {
                             TextButton(onClick = {
                                 showPermissionDialog = false
                                 openAppSettings()
                             }) {
-                                Text("설정으로 이동")
+                                Text(stringResource(R.string.permission_go_to_settings))
                             }
                         },
                         dismissButton = {
                             TextButton(onClick = { showPermissionDialog = false }) {
-                                Text("취소")
+                                Text(stringResource(R.string.action_cancel))
                             }
                         }
                     )
