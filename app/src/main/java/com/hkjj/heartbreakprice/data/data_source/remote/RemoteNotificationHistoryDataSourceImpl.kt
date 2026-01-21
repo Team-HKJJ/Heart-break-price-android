@@ -64,12 +64,29 @@ class RemoteNotificationHistoryDataSourceImpl : NotificationHistoryDataSource {
     override suspend fun readAsMarkNotification(id: String) {
         val uid = auth.currentUser?.uid ?: return
         try {
-            firestore.collection("Users")
-                .document(uid)
-                .collection("Notifications")
-                .document(id)
-                .update("isRead", true)
-                .await()
+            val userRef = firestore.collection("Users").document(uid)
+            val notificationRef = userRef.collection("Notifications").document(id)
+
+            val productName = firestore.runTransaction { transaction ->
+                val snapshot = transaction.get(notificationRef)
+                transaction.update(notificationRef, "isRead", true)
+                snapshot.getString("productName")
+            }.await()
+
+            if (!productName.isNullOrEmpty()) {
+                val wishesSnapshot = userRef.collection("Wishes")
+                    .whereEqualTo("name", productName)
+                    .get()
+                    .await()
+
+                if (!wishesSnapshot.isEmpty) {
+                    val batch = firestore.batch()
+                    for (document in wishesSnapshot.documents) {
+                        batch.update(document.reference, "targetNotified", false)
+                    }
+                    batch.commit().await()
+                }
+            }
         } catch (e: Exception) {
             // 에러 처리
         }
