@@ -5,9 +5,6 @@ import androidx.lifecycle.viewModelScope
 import com.hkjj.heartbreakprice.domain.usecase.GetSearchedProductUseCase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.debounce
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import com.hkjj.heartbreakprice.core.Result
 import com.hkjj.heartbreakprice.domain.model.Product
@@ -15,6 +12,8 @@ import com.hkjj.heartbreakprice.domain.model.WishProduct
 import com.hkjj.heartbreakprice.domain.usecase.AddWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.DeleteWishUseCase
 import com.hkjj.heartbreakprice.domain.usecase.GetWishesUseCase
+import com.hkjj.heartbreakprice.domain.usecase.SaveLastSearchTermUseCase
+import com.hkjj.heartbreakprice.domain.usecase.GetLastSearchTermUseCase
 
 import kotlinx.coroutines.flow.update
 
@@ -22,7 +21,9 @@ class SearchViewModel(
     private val getSearchedProductUseCase: GetSearchedProductUseCase,
     private val addWishUseCase: AddWishUseCase,
     private val deleteWishUseCase: DeleteWishUseCase,
-    private val getWishesUseCase: GetWishesUseCase
+    private val getWishesUseCase: GetWishesUseCase,
+    private val saveLastSearchTermUseCase: SaveLastSearchTermUseCase,
+    private val getLastSearchTermUseCase: GetLastSearchTermUseCase
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(SearchUiState())
     val uiState = _uiState.asStateFlow()
@@ -30,9 +31,19 @@ class SearchViewModel(
     private var allProducts: List<Product> = emptyList()
 
     init {
-        // 초기 로딩 시 전체 상품을 가져옵니다.
+        // 초기 로딩 시 마지막 검색어 확인 및 검색
         viewModelScope.launch {
-            val result = getSearchedProductUseCase("")
+            val lastTerm = getLastSearchTermUseCase()
+            val termToSearch = if (!lastTerm.isNullOrBlank()) {
+                _uiState.update { it.copy(searchTerm = lastTerm) }
+                lastTerm
+            } else {
+                val defaultTerm = "새싹"
+                _uiState.update { it.copy(searchTerm = defaultTerm) }
+                defaultTerm
+            }
+            
+            val result = getSearchedProductUseCase(termToSearch)
             if (result is Result.Success) {
                 allProducts = result.data
                 updateCategories()
@@ -93,7 +104,8 @@ class SearchViewModel(
             }
             is SearchAction.OnSearch -> {
                 viewModelScope.launch {
-                    val result = getSearchedProductUseCase(_uiState.value.searchTerm)
+                    val term = _uiState.value.searchTerm
+                    val result = getSearchedProductUseCase(term)
                     if (result is Result.Success) {
                         allProducts = result.data
                         updateCategories()
@@ -101,6 +113,14 @@ class SearchViewModel(
                     }
                 }
             }
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        // ViewModel 소멸 시(또는 화면 종료 시) 마지막 검색어 저장
+        viewModelScope.launch {
+            saveLastSearchTermUseCase(_uiState.value.searchTerm)
         }
     }
 
