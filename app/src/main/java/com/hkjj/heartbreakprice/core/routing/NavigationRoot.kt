@@ -30,7 +30,7 @@ fun NavigationRoot(
             when (event) {
                 is NavigationEvent.NavigateTo -> {
                     navController.navigate(event.route) {
-                        if (event.route is Route.SignIn) {
+                        if (event.route is Route.Main || event.route is Route.SignIn) {
                             popUpTo(0) { inclusive = true }
                         }
                     }
@@ -46,7 +46,6 @@ fun NavigationRoot(
         navController = navController,
         startDestination = Route.Entry,
     ) {
-
         composable<Route.Entry> {
             LaunchedEffect(uiState.isSignIn) {
                 val target: Route = if (uiState.isSignIn) {
