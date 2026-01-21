@@ -30,6 +30,9 @@ class NavigationViewModel(
                 is NavigationAction.NavigateToMain -> {
                     _event.send(NavigationEvent.NavigateTo(Route.Main))
                 }
+                is NavigationAction.NavigateToSignIn -> {
+                    _event.send(NavigationEvent.NavigateTo(Route.SignIn))
+                }
                 is NavigationAction.NavigateToSignUp -> {
                     _event.send(NavigationEvent.NavigateTo(Route.SignUp))
                 }
