@@ -1,11 +1,9 @@
 package com.hkjj.heartbreakprice.core.routing
 
-import androidx.compose.foundation.layout.safeContentPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -49,7 +47,7 @@ fun NavigationRoot(
         composable<Route.Entry> {
             LaunchedEffect(uiState.isSignIn) {
                 val target: Route = if (uiState.isSignIn) {
-                    Route.Main
+                    Route.Main()
                 } else {
                     Route.SignIn
                 }
@@ -59,6 +57,7 @@ fun NavigationRoot(
                 }
             }
         }
+
         /* ===================== */
         /* ===== AUTH FLOW ===== */
         /* ===================== */
@@ -76,8 +75,10 @@ fun NavigationRoot(
         /* ===================== */
         /* ===== MAIN FLOW ===== */
         /* ===================== */
-        composable<Route.Main> {
+        composable<Route.Main> { backStackEntry ->
+            val mainRoute: Route.Main = backStackEntry.toRoute()
             MainRoot(
+                initialTab = mainRoute.initialTab,
                 onNavigationAction = viewModel::onAction
             )
         }

@@ -1,5 +1,6 @@
 package com.hkjj.heartbreakprice.presentation.screen.main
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
@@ -27,9 +28,11 @@ import com.hkjj.heartbreakprice.presentation.screen.wish.WishRoot
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainRoot(
+    initialTab: String? = null,
     bottomNavController: NavHostController = rememberNavController(),
     onNavigationAction: (NavigationAction) -> Unit
 ) {
+    Log.d("MainRoot", "initialTab: $initialTab")
     val items = listOf(
         Triple("search", Icons.Default.Search, "검색"),
         Triple("wish", Icons.Default.Favorite, "즐겨찾기"),
@@ -80,7 +83,7 @@ fun MainRoot(
     ) { innerPadding ->
         NavHost(
             navController = bottomNavController,
-            startDestination = "search",
+            startDestination = initialTab ?: "search",
             modifier = Modifier.padding(innerPadding)
         ) {
             composable("search") { SearchRoot() }

@@ -28,7 +28,7 @@ class NavigationViewModel(
         viewModelScope.launch {
             when (action) {
                 is NavigationAction.NavigateToMain -> {
-                    _event.send(NavigationEvent.NavigateTo(Route.Main))
+                    _event.send(NavigationEvent.NavigateTo(Route.Main(action.initialTab)))
                 }
                 is NavigationAction.NavigateToSignIn -> {
                     _event.send(NavigationEvent.NavigateTo(Route.SignIn))

@@ -14,7 +14,7 @@ sealed interface Route {
     data object SignUp : Route
 
     @Serializable
-    data object Main : Route
+    data class Main(val initialTab: String? = null) : Route
 
     @Serializable
     data class Detail(val param: String) : Route
