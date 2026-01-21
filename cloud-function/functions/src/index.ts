@@ -146,7 +146,7 @@ async function notifyUsersIfNeeded(
         `${currentPrice.toLocaleString()}원`;
 
       /** 1️⃣ Firestore notifications 저장 */
-      await userDocRef.collection("notifications").add({
+      await userDocRef.collection("Notifications").add({
         type: "TARGET_REACHED",
         productName,
         productImage,
