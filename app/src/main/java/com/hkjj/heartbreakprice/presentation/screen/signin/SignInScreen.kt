@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -67,13 +68,13 @@ fun SignInScreen(
             )
             Spacer(modifier = Modifier.height(8.dp))
             Text(
-                "심쿵가",
+                stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.Gray900
             )
             Text(
-                "원하는 가격에 상품을 구매하세요",
+                stringResource(R.string.app_tagline),
                 style = MaterialTheme.typography.bodyMedium,
                 color = AppColors.Gray600
             )
@@ -89,7 +90,7 @@ fun SignInScreen(
             ) {
                 Column(modifier = Modifier.padding(32.dp)) {
                     Text(
-                        "로그인",
+                        stringResource(R.string.sign_in_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = AppColors.Gray900,
@@ -125,7 +126,7 @@ fun SignInScreen(
 
                     // Email Input
                     Text(
-                        "이메일",
+                        stringResource(R.string.sign_in_email_label),
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
@@ -143,7 +144,7 @@ fun SignInScreen(
                         },
                         placeholder = { 
                             Text(
-                                "이메일을 입력하세요.",
+                                stringResource(R.string.sign_in_email_placeholder),
                                 fontSize = 14.sp,
                                 color = AppColors.Gray400
                             ) 
@@ -163,7 +164,7 @@ fun SignInScreen(
 
                     // Password Input
                     Text(
-                        "비밀번호",
+                        stringResource(R.string.sign_in_password_label),
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
@@ -181,7 +182,7 @@ fun SignInScreen(
                         },
                         placeholder = { 
                             Text(
-                                "비밀번호를 입력하세요.",
+                                stringResource(R.string.sign_in_password_placeholder),
                                 fontSize = 14.sp,
                                 color = AppColors.Gray400
                             ) 
@@ -210,7 +211,7 @@ fun SignInScreen(
                         shape = RoundedCornerShape(12.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = AppColors.Primary)
                     ) {
-                        Text(if (state.isLoading) "로그인 중..." else "로그인")
+                        Text(if (state.isLoading) stringResource(R.string.sign_in_loading) else stringResource(R.string.sign_in))
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -221,12 +222,12 @@ fun SignInScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "계정이 없으신가요?",
+                            stringResource(R.string.sign_in_no_account),
                             style = MaterialTheme.typography.bodySmall,
                             color = AppColors.Gray500
                         )
                         TextButton(onClick = { onAction(SignInAction.OnSignUpClick) }) {
-                            Text("회원가입", color = AppColors.Primary)
+                            Text(stringResource(R.string.sign_up), color = AppColors.Primary)
                         }
                     }
                     Spacer(modifier = Modifier.height(64.dp))

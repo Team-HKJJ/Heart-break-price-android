@@ -49,10 +49,12 @@
     <string name="sign_in_loading">Signing in...</string>
 
     <string name="sign_in_email_label">Email</string>
-    <string name="sign_in_email_placeholder">example@email.com</string>
+    <string name="sign_in_email_placeholder">Enter your email</string>
+    <string name="sign_in_email_hint">example@email.com</string>
 
     <string name="sign_in_password_label">Password</string>
-    <string name="sign_in_password_placeholder">••••••••</string>
+    <string name="sign_in_password_placeholder">Enter your password</string>
+    <string name="sign_in_password_hint">••••••••</string>
 
     <string name="sign_in_no_account">Don’t have an account?</string>
     <string name="sign_in_sign_up">Sign Up</string>
@@ -70,6 +72,7 @@
     <!-- Sign Up -->
     <string name="sign_up_success">Sign up completed! Redirecting to login page...</string>
     <string name="name">Name</string>
+    <string name="sign_up_name_placeholder">Enter your name</string>
     <string name="name_hint">John Doe</string>
 
     <string name="email">Email</string>
@@ -80,6 +83,7 @@
     <string name="password_rule">At least 6 characters</string>
 
     <string name="confirm_password">Confirm Password</string>
+    <string name="sign_up_confirm_password_placeholder">Enter the same password</string>
 
     <string name="signing_up">Signing up...</string>
     <string name="sign_up_done">Done!</string>
@@ -155,4 +159,9 @@
     <string name="wish_action_delete">Delete</string>
 
     <string name="price_format">₩%1$s</string>
+
+    <!-- Permission -->
+    <string name="permission_title">Notification Permission Required</string>
+    <string name="permission_desc">Notification permission is required to receive alerts for product price drops. Please allow permission in the settings screen.</string>
+    <string name="permission_go_to_settings">Go to Settings</string>
 </resources>

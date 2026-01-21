@@ -19,12 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hkjj.heartbreakprice.presentation.component.ProductItem
 import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -44,7 +46,7 @@ fun SearchScreen(
         // 1. Title
         item {
             Text(
-                text = "상품 검색",
+                text = stringResource(R.string.nav_search),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = AppColors.Gray900,
@@ -64,7 +66,7 @@ fun SearchScreen(
                     value = uiState.searchTerm,
                     onValueChange = { onSearchAction(SearchAction.OnChangeSearchTerm(it)) },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("상품명을 검색하세요...") },
+                    placeholder = { Text(stringResource(R.string.search_placeholder)) },
                     trailingIcon = {
                         IconButton(onClick = {
                             onSearchAction(SearchAction.OnSearch)
@@ -134,7 +136,7 @@ fun SearchScreen(
                         .padding(bottom = 100.dp),
                     contentAlignment = Alignment.Center
                 ) {
-                    Text(text = "검색 결과가 없습니다.", color = AppColors.Gray500)
+                    Text(text = stringResource(R.string.search_empty_result), color = AppColors.Gray500)
                 }
             }
         } else {

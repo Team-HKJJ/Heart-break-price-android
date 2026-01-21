@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -17,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.hkjj.heartbreakprice.R
 import com.hkjj.heartbreakprice.core.routing.NavigationAction
 import com.hkjj.heartbreakprice.presentation.screen.notification.NotificationRoot
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
@@ -31,10 +33,10 @@ fun MainRoot(
     onNavigationAction: (NavigationAction) -> Unit
 ) {
     val items = listOf(
-        Triple("search", Icons.Default.Search, "검색"),
-        Triple("wish", Icons.Default.Favorite, "즐겨찾기"),
-        Triple("notification", Icons.Default.Notifications, "알림"),
-        Triple("settings", Icons.Default.Settings, "설정")
+        Triple("search", Icons.Default.Search, stringResource(R.string.nav_search)),
+        Triple("wish", Icons.Default.Favorite, stringResource(R.string.nav_wish)),
+        Triple("notification", Icons.Default.Notifications, stringResource(R.string.nav_notification)),
+        Triple("settings", Icons.Default.Settings, stringResource(R.string.nav_settings))
     )
     val currentRoute by bottomNavController.currentBackStackEntryAsState()
     val isSelected = { route: String -> currentRoute?.destination?.route == route }
@@ -44,7 +46,7 @@ fun MainRoot(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "심쿵가",
+                        stringResource(R.string.app_name),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )

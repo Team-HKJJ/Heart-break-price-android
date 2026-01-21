@@ -20,12 +20,14 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.hkjj.heartbreakprice.presentation.component.TargetPriceDialog
 import com.hkjj.heartbreakprice.presentation.component.WishCard
 import com.hkjj.heartbreakprice.ui.AppColors
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun WishScreen(
@@ -58,8 +60,8 @@ fun WishScreen(
                 tint = AppColors.Gray300
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("즐겨찾기가 비어있습니다", style = MaterialTheme.typography.titleMedium)
-            Text("검색 페이지에서 상품을 즐겨찾기에 추가해보세요", color = AppColors.Gray500)
+            Text(stringResource(R.string.wish_empty_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.wish_empty_desc), color = AppColors.Gray500)
         }
     } else {
         LazyColumn(
@@ -72,13 +74,13 @@ fun WishScreen(
             item {
                 Column {
                     Text(
-                        text = "즐겨찾기",
+                        text = stringResource(R.string.wish_title),
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = AppColors.Gray900
                     )
                     Text(
-                        text = "총 ${state.wishProducts.size}개의 상품을 추적하고 있습니다",
+                        text = stringResource(R.string.wish_tracking_count, state.wishProducts.size),
                         color = AppColors.Gray500,
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
@@ -92,7 +94,7 @@ fun WishScreen(
                     onRemove = {
                         onAction(WishAction.OnDeleteClick(product.id))
                     },
-                    targetPriceText = if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
+                    targetPriceText = if (product.price <= product.targetPrice) stringResource(R.string.wish_target_reached) else stringResource(R.string.wish_tracking),
                     targetPriceColor = if (product.price <= product.targetPrice) {
                         AppColors.Success
                     } else {
