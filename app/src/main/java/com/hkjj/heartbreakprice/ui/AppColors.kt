@@ -31,4 +31,5 @@ object AppColors {
     val Gray900 = Color(0xFF111827)
 
     val Transparent = Color.Transparent
+    val Unspecified = Color.Unspecified
 }
