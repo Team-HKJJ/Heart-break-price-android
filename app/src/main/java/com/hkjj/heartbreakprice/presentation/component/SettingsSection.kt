@@ -20,17 +20,17 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.hkjj.heartbreakprice.domain.model.SettingItem
+import com.hkjj.heartbreakprice.ui.AppColors
 
 @Composable
 fun SettingsSection(title: String, items: List<SettingItem>) {
     Card(
         shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(containerColor = AppColors.White),
         modifier = Modifier.fillMaxWidth()
     ) {
         Column {
@@ -40,7 +40,7 @@ fun SettingsSection(title: String, items: List<SettingItem>) {
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(16.dp)
             )
-            HorizontalDivider(color = Color(0xFFE5E7EB), thickness = 1.dp)
+            HorizontalDivider(color = AppColors.Gray200, thickness = 1.dp)
 
             items.forEachIndexed { index, item ->
                 Row(
@@ -50,21 +50,21 @@ fun SettingsSection(title: String, items: List<SettingItem>) {
                         .padding(horizontal = 24.dp, vertical = 16.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(item.icon, contentDescription = null, tint = Color.Gray, modifier = Modifier.size(20.dp))
+                    Icon(item.icon, contentDescription = null, tint = AppColors.Gray500, modifier = Modifier.size(20.dp))
                     Spacer(modifier = Modifier.width(12.dp))
-                    Text(item.title, modifier = Modifier.weight(1f), color = Color(0xFF374151))
+                    Text(item.title, modifier = Modifier.weight(1f), color = AppColors.Gray700)
 
                     if (item.value != null) {
-                        Text(item.value, color = Color.Gray, fontSize = 14.sp)
+                        Text(item.value, color = AppColors.Gray500, fontSize = 14.sp)
                         Spacer(modifier = Modifier.width(8.dp))
                     }
 
                     if (item.showArrow) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = Color(0xFF9CA3AF))
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, contentDescription = null, tint = AppColors.Gray400)
                     }
                 }
                 if (index < items.size - 1) {
-                    HorizontalDivider(color = Color(0xFFF3F4F6), thickness = 1.dp, modifier = Modifier.padding(horizontal = 24.dp))
+                    HorizontalDivider(color = AppColors.Gray100, thickness = 1.dp, modifier = Modifier.padding(horizontal = 24.dp))
                 }
             }
         }
