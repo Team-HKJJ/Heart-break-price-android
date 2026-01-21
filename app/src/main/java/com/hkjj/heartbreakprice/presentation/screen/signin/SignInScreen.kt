@@ -38,11 +38,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
-
+import com.hkjj.heartbreakprice.R
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.ui.res.stringResource
 
 @Composable
 fun SignInScreen(
@@ -86,13 +87,13 @@ fun SignInScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                "심쿵가",
+                stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF111827)
             )
             Text(
-                "원하는 가격에 상품을 구매하세요",
+                stringResource(R.string.app_tagline),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color(0xFF4B5563)
             )
@@ -108,7 +109,7 @@ fun SignInScreen(
             ) {
                 Column(modifier = Modifier.padding(32.dp)) {
                     Text(
-                        "로그인",
+                        stringResource(R.string.sign_in_title),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF111827),
@@ -141,7 +142,7 @@ fun SignInScreen(
 
                     // Email Input
                     Text(
-                        "이메일",
+                        stringResource(R.string.sign_in_email_label),
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
@@ -156,7 +157,7 @@ fun SignInScreen(
                                 tint = Color.Gray
                             )
                         },
-                        placeholder = { Text("example@email.com") },
+                        placeholder = { Text(stringResource(R.string.sign_in_email_placeholder)) },
                         singleLine = true,
                         enabled = !state.isLoading
                     )
@@ -165,7 +166,7 @@ fun SignInScreen(
 
                     // Password Input
                     Text(
-                        "비밀번호",
+                        stringResource(R.string.sign_in_password_label),
                         style = MaterialTheme.typography.labelMedium,
                         modifier = Modifier.padding(bottom = 4.dp)
                     )
@@ -180,7 +181,7 @@ fun SignInScreen(
                                 tint = Color.Gray
                             )
                         },
-                        placeholder = { Text("••••••••") },
+                        placeholder = { Text(stringResource(R.string.sign_in_password_placeholder)) },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
@@ -196,7 +197,12 @@ fun SignInScreen(
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
                     ) {
-                        Text(if (state.isLoading) "로그인 중..." else "로그인")
+                        Text(
+                            if (state.isLoading)
+                                stringResource(R.string.sign_in_loading)
+                            else
+                                stringResource(R.string.sign_in_title)
+                        )
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -207,12 +213,12 @@ fun SignInScreen(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            "계정이 없으신가요?",
+                            stringResource(R.string.sign_in_no_account),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray
                         )
                         TextButton(onClick = { onAction(SignInAction.OnSignUpClick) }) {
-                            Text("회원가입", color = Color(0xFF2563EB))
+                            Text(stringResource(R.string.sign_in_sign_up), color = Color(0xFF2563EB))
                         }
                     }
 
@@ -233,18 +239,24 @@ fun SignInScreen(
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Text(
-                                "데모 계정으로 로그인",
+                                stringResource(R.string.sign_in_demo_title),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color.Gray
                             )
                             Spacer(modifier = Modifier.height(4.dp))
                             Text(
-                                "이메일: demo@example.com",
+                                stringResource(
+                                    R.string.sign_in_demo_email,
+                                    "demo@example.com"
+                                ),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF4B5563)
                             )
                             Text(
-                                "비밀번호: demo1234",
+                                stringResource(
+                                    R.string.sign_in_demo_password,
+                                    "demo1234"
+                                ),
                                 style = MaterialTheme.typography.bodySmall,
                                 color = Color(0xFF4B5563)
                             )

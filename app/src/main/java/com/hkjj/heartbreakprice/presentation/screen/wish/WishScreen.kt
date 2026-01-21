@@ -1,6 +1,6 @@
 package com.hkjj.heartbreakprice.presentation.screen.wish
 
-
+import com.hkjj.heartbreakprice.R
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -52,13 +53,13 @@ fun WishScreen(
         ) {
             Icon(
                 Icons.Default.Notifications,
-                contentDescription = "Empty",
+                contentDescription = stringResource(R.string.wish_empty_icon_desc),
                 modifier = Modifier.size(64.dp),
                 tint = Color.LightGray
             )
             Spacer(modifier = Modifier.height(16.dp))
-            Text("즐겨찾기가 비어있습니다", style = MaterialTheme.typography.titleMedium)
-            Text("검색 페이지에서 상품을 즐겨찾기에 추가해보세요", color = Color.Gray)
+            Text(stringResource(R.string.wish_empty_title), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.wish_empty_desc), color = Color.Gray)
         }
     } else {
         Column(
@@ -68,12 +69,15 @@ fun WishScreen(
                 .padding(16.dp)
         ) {
             Text(
-                text = "즐겨찾기",
+                text = stringResource(R.string.wish_title),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "총 ${state.wishProducts.size}개의 상품을 추적하고 있습니다",
+                text = stringResource(
+                    R.string.wish_tracking_count,
+                    state.wishProducts.size
+                ),
                 color = Color.Gray,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier.padding(bottom = 16.dp)
@@ -88,7 +92,7 @@ fun WishScreen(
                         onRemove = {
                             onAction(WishAction.OnDeleteClick(product.id))
                         },
-                        targetPriceText = if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
+                        targetPriceResId = if (product.price <= product.targetPrice) R.string.wish_target_reached else R.string.wish_tracking,
                         targetPriceColor = if (product.price <= product.targetPrice) {
                             Color(0xFF22C55E)
                         } else {

@@ -39,10 +39,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun SignUpScreen(
@@ -86,13 +88,13 @@ fun SignUpScreen(
             }
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                "심쿵가",
+                stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF111827)
             )
             Text(
-                "계정을 만들고 시작하세요",
+                stringResource(R.string.sign_up_title),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color(0xFF4B5563)
             )
@@ -107,7 +109,7 @@ fun SignUpScreen(
             ) {
                 Column(modifier = Modifier.padding(32.dp)) {
                     Text(
-                        "회원가입",
+                        stringResource(R.string.sign_up),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold,
                         color = Color(0xFF111827),
@@ -140,18 +142,18 @@ fun SignUpScreen(
                         ) {
                             Icon(Icons.Default.CheckCircle, contentDescription = null, tint = Color(0xFF16A34A), modifier = Modifier.size(16.dp))
                             Spacer(modifier = Modifier.width(8.dp))
-                            Text("회원가입이 완료되었습니다! 로그인 페이지로 이동합니다...", color = Color(0xFF166534), style = MaterialTheme.typography.bodySmall)
+                            Text(stringResource(R.string.sign_up_success), color = Color(0xFF166534), style = MaterialTheme.typography.bodySmall)
                         }
                     }
 
                     // Name
-                    Text("이름", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
+                    Text(stringResource(R.string.name), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
                         value = state.name,
                         onValueChange = { onAction(SignUpAction.OnNameChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Person, contentDescription = null, tint = Color.Gray) },
-                        placeholder = { Text("홍길동") },
+                        placeholder = { Text(stringResource(R.string.name_hint)) },
                         singleLine = true,
                         enabled = !state.isLoading && !state.isSuccess
                     )
@@ -159,13 +161,13 @@ fun SignUpScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Email
-                    Text("이메일", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
+                    Text(stringResource(R.string.email), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
                         value = state.email,
                         onValueChange = { onAction(SignUpAction.OnEmailChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Email, contentDescription = null, tint = Color.Gray) },
-                        placeholder = { Text("example@email.com") },
+                        placeholder = { Text(stringResource(R.string.email_hint)) },
                         singleLine = true,
                         enabled = !state.isLoading && !state.isSuccess
                     )
@@ -173,30 +175,30 @@ fun SignUpScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Password
-                    Text("비밀번호", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
+                    Text(stringResource(R.string.password), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
                         value = state.password,
                         onValueChange = { onAction(SignUpAction.OnPasswordChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Gray) },
-                        placeholder = { Text("••••••••") },
+                        placeholder = { Text(stringResource(R.string.password_hint)) },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
                         enabled = !state.isLoading && !state.isSuccess
                     )
-                    Text("최소 6자 이상", style = MaterialTheme.typography.bodySmall, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
+                    Text(stringResource(R.string.password_rule), style = MaterialTheme.typography.bodySmall, color = Color.Gray, modifier = Modifier.padding(top = 4.dp))
 
                     Spacer(modifier = Modifier.height(16.dp))
 
                     // Confirm Password
-                    Text("비밀번호 확인", style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
+                    Text(stringResource(R.string.confirm_password), style = MaterialTheme.typography.labelMedium, modifier = Modifier.padding(bottom = 4.dp))
                     OutlinedTextField(
                         value = state.confirmPassword,
                         onValueChange = { onAction(SignUpAction.OnConfirmPasswordChange(it)) },
                         modifier = Modifier.fillMaxWidth(),
                         leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null, tint = Color.Gray) },
-                        placeholder = { Text("••••••••") },
+                        placeholder = { Text(stringResource(R.string.password_hint)) },
                         visualTransformation = PasswordVisualTransformation(),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                         singleLine = true,
@@ -212,7 +214,7 @@ fun SignUpScreen(
                         shape = RoundedCornerShape(8.dp),
                         colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB))
                     ) {
-                        Text(if (state.isLoading) "가입 중..." else if (state.isSuccess) "완료!" else "회원가입")
+                        Text(if (state.isLoading) stringResource(R.string.signing_up) else if (state.isSuccess) stringResource(R.string.sign_up_done) else stringResource(R.string.sign_up))
                     }
 
                     Spacer(modifier = Modifier.height(24.dp))
@@ -222,9 +224,9 @@ fun SignUpScreen(
                         horizontalArrangement = Arrangement.Center,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text("이미 계정이 있으신가요?", style = MaterialTheme.typography.bodySmall, color = Color.Gray)
+                        Text(stringResource(R.string.already_have_account), style = MaterialTheme.typography.bodySmall, color = Color.Gray)
                         TextButton(onClick = { onAction(SignUpAction.OnLoginClick) }, enabled = !state.isLoading && !state.isSuccess) {
-                            Text("로그인", color = Color(0xFF2563EB))
+                            Text(stringResource(R.string.sign_in), color = Color(0xFF2563EB))
                         }
                     }
                 }

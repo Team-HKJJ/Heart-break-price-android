@@ -33,6 +33,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -43,15 +44,18 @@ import coil.compose.AsyncImage
 import com.hkjj.heartbreakprice.domain.model.WishProduct
 import java.text.NumberFormat
 import java.util.Locale
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun WishCard(
     wishProduct: WishProduct,
-    targetPriceText: String,
+    targetPriceResId: Int,
     targetPriceColor: Color,
     onTargetPriceButtonClick: () -> Unit,
     onRemove: () -> Unit,
 ) {
+    val targetPriceText = stringResource(targetPriceResId)
+
     Card(
         shape = RoundedCornerShape(8.dp),
         colors = CardDefaults.cardColors(containerColor = Color.White),
@@ -83,7 +87,10 @@ fun WishCard(
                                 .padding(bottom = 4.dp)
                         ) {
                             Text(
-                                text = "$discount% 할인",
+                                text = stringResource(
+                                    R.string.wish_discount,
+                                    discount
+                                ),
                                 color = Color.White,
                                 style = MaterialTheme.typography.labelSmall
                             )
@@ -144,11 +151,14 @@ fun WishCard(
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Price
-                Text("현재가", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                Text(stringResource(R.string.wish_current_price), style = MaterialTheme.typography.labelSmall, color = Color.Gray)
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     wishProduct.originalPrice?.let {
                         Text(
-                            text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(it)}원",
+                            text = stringResource(
+                                R.string.price_format,
+                                NumberFormat.getNumberInstance(Locale.KOREA).format(it)
+                            ),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color.Gray,
                             textDecoration = TextDecoration.LineThrough
@@ -156,7 +166,10 @@ fun WishCard(
                         Spacer(modifier = Modifier.width(4.dp))
                     }
                     Text(
-                        text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.price)}원",
+                        text = stringResource(
+                            R.string.price_format,
+                            NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.price)
+                        ),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -164,9 +177,12 @@ fun WishCard(
 
                 if (wishProduct.targetPrice != null) {
                     Spacer(modifier = Modifier.height(4.dp))
-                    Text("목표가", style = MaterialTheme.typography.labelSmall, color = Color.Gray)
+                    Text(stringResource(R.string.wish_target_price), style = MaterialTheme.typography.labelSmall, color = Color.Gray)
                     Text(
-                        text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.targetPrice)}원",
+                        text = stringResource(
+                            R.string.price_format,
+                            NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.targetPrice)
+                        ),
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.primary
@@ -191,14 +207,14 @@ fun WishCard(
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text("수정", fontSize = 12.sp)
+                            Text(stringResource(R.string.wish_action_edit), fontSize = 12.sp)
                         } else {
                             Icon(
                                 Icons.Default.NotificationsOff,
                                 contentDescription = null,
                                 modifier = Modifier.size(16.dp)
                             )
-                            Text("목표가", fontSize = 12.sp)
+                            Text(stringResource(R.string.wish_action_set_target), fontSize = 12.sp)
                         }
                     }
 
@@ -237,7 +253,7 @@ private fun WishCardPreview() {
 
     WishCard(
         wishProduct = wishProduct,
-        targetPriceText = "추적중",
+        targetPriceResId = R.string.wish_tracking,
         targetPriceColor = Color(0xFF3B82F6),
         onTargetPriceButtonClick = {},
         onRemove = {}

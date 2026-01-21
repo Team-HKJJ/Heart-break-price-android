@@ -19,8 +19,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun EmptyNotificationItem() {
@@ -41,13 +43,13 @@ fun EmptyNotificationItem() {
         }
         Spacer(modifier = Modifier.height(16.dp))
         Text(
-            text = "알림이 없습니다",
+            text = stringResource(R.string.notification_empty_title),
             style = MaterialTheme.typography.titleMedium,
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = "상품을 즐겨찾기하고 목표가를 설정하면\n가격 변동 알림을 받을 수 있습니다.",
+            text = stringResource(R.string.notification_empty_desc),
             style = MaterialTheme.typography.bodyMedium,
             color = Color(0xFF6B7280),
             textAlign = androidx.compose.ui.text.style.TextAlign.Center

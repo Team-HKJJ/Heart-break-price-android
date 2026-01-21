@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -23,6 +24,7 @@ import com.hkjj.heartbreakprice.presentation.screen.notification.NotificationRoo
 import com.hkjj.heartbreakprice.presentation.screen.search.SearchRoot
 import com.hkjj.heartbreakprice.presentation.screen.setting.SettingRoot
 import com.hkjj.heartbreakprice.presentation.screen.wish.WishRoot
+import com.hkjj.heartbreakprice.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -31,10 +33,10 @@ fun MainRoot(
     onNavigationAction: (NavigationAction) -> Unit
 ) {
     val items = listOf(
-        Triple("search", Icons.Default.Search, "검색"),
-        Triple("wish", Icons.Default.Favorite, "즐겨찾기"),
-        Triple("notification", Icons.Default.Notifications, "알림"),
-        Triple("settings", Icons.Default.Settings, "설정")
+        Triple("search", Icons.Default.Search, R.string.nav_search),
+        Triple("wish", Icons.Default.Favorite, R.string.nav_wish),
+        Triple("notification", Icons.Default.Notifications, R.string.nav_wish),
+        Triple("settings", Icons.Default.Settings, R.string.nav_settings)
     )
     val currentRoute by bottomNavController.currentBackStackEntryAsState()
 
@@ -43,7 +45,7 @@ fun MainRoot(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        "심쿵가",
+                        stringResource(id = R.string.app_name),
                         style = MaterialTheme.typography.titleLarge,
                         fontWeight = FontWeight.Bold
                     )
@@ -58,7 +60,7 @@ fun MainRoot(
             NavigationBar(
                 containerColor = Color.White
             ) {
-                items.forEach { (route, icon, label) ->
+                items.forEach { (route, icon, labelRes) ->
                     NavigationBarItem(
                         selected = currentRoute?.destination?.route == route,
                         onClick = {
@@ -70,8 +72,8 @@ fun MainRoot(
                                 restoreState = true
                             }
                         },
-                        icon = { Icon(icon, contentDescription = label) },
-                        label = { Text(label) },
+                        icon = { Icon(icon, contentDescription = stringResource(id = labelRes)) },
+                        label = { Text(stringResource(id = labelRes)) },
                         alwaysShowLabel = true
                     )
                 }

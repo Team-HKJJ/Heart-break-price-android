@@ -12,17 +12,18 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.hkjj.heartbreakprice.R
 import com.hkjj.heartbreakprice.presentation.component.ProductItem
-import java.util.*
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,7 +47,7 @@ fun SearchScreen(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(bottom = 24.dp),
-            placeholder = { Text("상품명을 검색하세요...") },
+            placeholder = { Text(stringResource(R.string.search_placeholder)) },
             trailingIcon = {
                 IconButton(onClick = {
                     onSearchAction(SearchAction.OnSearch)
@@ -99,7 +100,7 @@ fun SearchScreen(
                 modifier = Modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "검색 결과가 없습니다.", color = Color.Gray)
+                Text(text =stringResource(R.string.search_empty_result), color = Color.Gray)
             }
         } else {
             LazyColumn(

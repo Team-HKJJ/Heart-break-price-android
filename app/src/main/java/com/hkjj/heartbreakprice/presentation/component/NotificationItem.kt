@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -40,6 +41,7 @@ import coil.compose.AsyncImage
 import com.hkjj.heartbreakprice.core.util.TimeUtil.formatTimeAgo
 import com.hkjj.heartbreakprice.domain.model.Notification
 import com.hkjj.heartbreakprice.domain.model.NotificationType
+import com.hkjj.heartbreakprice.R
 
 @Composable
 fun NotificationItem(
@@ -131,14 +133,14 @@ fun NotificationItem(
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = "${notification.oldPrice}원",
+                            text = stringResource(R.string.price_won_format, notification.oldPrice),
                             style = MaterialTheme.typography.bodySmall,
                             color = Color(0xFF9CA3AF),
                             textDecoration = androidx.compose.ui.text.style.TextDecoration.LineThrough
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "${notification.newPrice}원",
+                            text = stringResource(R.string.price_won_format, notification.newPrice),
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF2563EB)
@@ -146,7 +148,7 @@ fun NotificationItem(
                         Spacer(modifier = Modifier.width(8.dp))
                         Badge(containerColor = Color(0xFFEF4444)) {
                             val discount = ((1.0 - notification.newPrice.toDouble() / notification.oldPrice) * 100).toInt()
-                            Text("$discount% 할인", color = Color.White, maxLines = 1)
+                            Text(stringResource(R.string.notification_discount, discount), color = Color.White, maxLines = 1)
                         }
                     }
                 }
@@ -174,14 +176,14 @@ fun NotificationItem(
                                 onClick = { onMarkAsRead(notification.id) },
                                 modifier = Modifier.height(32.dp)
                             ) {
-                                Text("읽음 표시", color = Color(0xFF2563EB), fontSize = 12.sp)
+                                Text(stringResource(R.string.notification_mark_as_read), color = Color(0xFF2563EB), fontSize = 12.sp)
                             }
                         }
                         IconButton(
                             onClick = { onDelete(notification.id) },
                             modifier = Modifier.size(32.dp)
                         ) {
-                            Icon(Icons.Default.Delete, contentDescription = "삭제", tint = Color(0xFFDC2626), modifier = Modifier.size(16.dp))
+                            Icon(Icons.Default.Delete, contentDescription = stringResource(R.string.notification_delete), tint = Color(0xFFDC2626), modifier = Modifier.size(16.dp))
                         }
                     }
                 }
