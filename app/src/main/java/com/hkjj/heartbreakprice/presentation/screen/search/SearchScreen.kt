@@ -1,5 +1,7 @@
 package com.hkjj.heartbreakprice.presentation.screen.search
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,14 +19,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.hkjj.heartbreakprice.presentation.component.ProductItem
 import com.hkjj.heartbreakprice.ui.AppColors
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SearchScreen(
     uiState: SearchUiState,
@@ -33,80 +35,111 @@ fun SearchScreen(
 ) {
     val focusManager = LocalFocusManager.current
 
-    Column(
+    LazyColumn(
         modifier = modifier
             .fillMaxSize()
-            .background(AppColors.Background) // Gray 50
-            .padding(horizontal = 16.dp, vertical = 24.dp)
+            .background(AppColors.Background),
+        contentPadding = PaddingValues(bottom = 16.dp)
     ) {
-        // Search Bar
-        TextField(
-            value = uiState.searchTerm,
-            onValueChange = { onSearchAction(SearchAction.OnChangeSearchTerm(it)) },
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
-            placeholder = { Text("상품명을 검색하세요...") },
-            trailingIcon = {
-                IconButton(onClick = {
-                    onSearchAction(SearchAction.OnSearch)
-                    focusManager.clearFocus()
-                }) {
-                    Icon(Icons.Default.Search, contentDescription = "Search", tint = AppColors.Gray500)
-                }
-            },
-            singleLine = true,
-            shape = RoundedCornerShape(8.dp),
-            colors = TextFieldDefaults.colors(
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent
-            ),
-            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
-            keyboardActions = KeyboardActions(onSearch = {
-                onSearchAction(SearchAction.OnSearch)
-                focusManager.clearFocus()
-            })
-        )
+        // 1. Title
+        item {
+            Text(
+                text = "상품 검색",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = AppColors.Gray900,
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 24.dp, bottom = 8.dp)
+            )
+        }
 
-        // Category Filter
-        LazyRow(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 24.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            items(uiState.categories) { category ->
-                val isSelected = uiState.selectedCategory == category
-                Button(
-                    onClick = { onSearchAction(SearchAction.CategoryClick(category)) },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = if (isSelected) MaterialTheme.colorScheme.primary else AppColors.White,
-                        contentColor = if (isSelected) AppColors.White else AppColors.Gray900
+        // 2. Search Bar (Sticky)
+        stickyHeader {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(AppColors.Background)
+                    .padding(horizontal = 16.dp, vertical = 8.dp)
+            ) {
+                TextField(
+                    value = uiState.searchTerm,
+                    onValueChange = { onSearchAction(SearchAction.OnChangeSearchTerm(it)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    placeholder = { Text("상품명을 검색하세요...") },
+                    trailingIcon = {
+                        IconButton(onClick = {
+                            onSearchAction(SearchAction.OnSearch)
+                            focusManager.clearFocus()
+                        }) {
+                            Icon(Icons.Default.Search, contentDescription = "Search", tint = AppColors.Gray500)
+                        }
+                    },
+                    singleLine = true,
+                    shape = RoundedCornerShape(12.dp),
+                    colors = TextFieldDefaults.colors(
+                        focusedContainerColor = AppColors.Gray100,
+                        unfocusedContainerColor = AppColors.Gray100,
+                        focusedIndicatorColor = Color.Transparent,
+                        unfocusedIndicatorColor = Color.Transparent,
+                        disabledIndicatorColor = Color.Transparent
                     ),
-                    border = if (isSelected) null else BorderStroke(1.dp, AppColors.Gray300),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-                    modifier = Modifier.height(32.dp)
-                ) {
-                    Text(text = category, fontSize = 12.sp)
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+                    keyboardActions = KeyboardActions(onSearch = {
+                        onSearchAction(SearchAction.OnSearch)
+                        focusManager.clearFocus()
+                    })
+                )
+            }
+        }
+
+        // 3. Category Filter (Disappears below the sticky search bar)
+        item {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 8.dp),
+                contentPadding = PaddingValues(horizontal = 16.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(uiState.categories) { category ->
+                    val isSelected = uiState.selectedCategory == category
+                    Surface(
+                        onClick = { onSearchAction(SearchAction.CategoryClick(category)) },
+                        shape = RoundedCornerShape(12.dp),
+                        color = if (isSelected) AppColors.Primary else AppColors.White,
+                        contentColor = if (isSelected) AppColors.White else AppColors.Gray900,
+                        border = if (isSelected) null else BorderStroke(1.dp, AppColors.Gray200),
+                        modifier = Modifier.height(36.dp)
+                    ) {
+                        Box(
+                            modifier = Modifier.padding(horizontal = 16.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Text(
+                                text = category,
+                                style = MaterialTheme.typography.labelLarge,
+                                fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Medium
+                            )
+                        }
+                    }
                 }
             }
         }
 
-        // Product List
+        // 4. Product List
         if (uiState.filteredProducts.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(text = "검색 결과가 없습니다.", color = AppColors.Gray500)
+            item {
+                Box(
+                    modifier = Modifier
+                        .fillParentMaxSize()
+                        .padding(bottom = 100.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(text = "검색 결과가 없습니다.", color = AppColors.Gray500)
+                }
             }
         } else {
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                contentPadding = PaddingValues(bottom = 16.dp)
-            ) {
-                items(uiState.filteredProducts) { product ->
+            items(uiState.filteredProducts) { product ->
+                Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
                     ProductItem(
                         product = product,
                         isFavorite = uiState.isFavorite(product.id),

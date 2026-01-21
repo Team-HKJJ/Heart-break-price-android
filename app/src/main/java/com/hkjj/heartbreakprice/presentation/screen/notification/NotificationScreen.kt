@@ -6,10 +6,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -35,31 +35,34 @@ fun NotificationScreen(
     ) {
         // Header
         Row(
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
             Column {
                 Text(
                     text = "알림",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = AppColors.Gray900
                 )
                 if (unreadCount > 0) {
                     Text(
                         text = "읽지 않은 알림 ${unreadCount}개",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = AppColors.Gray500
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = AppColors.Primary,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             }
             if (notifications.isNotEmpty() && unreadCount > 0) {
-                OutlinedButton(
+                TextButton(
                     onClick = { onAction(NotificationAction.MarkAllAsRead) },
-                    colors = ButtonDefaults.outlinedButtonColors(contentColor = AppColors.Primary),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(brush = androidx.compose.ui.graphics.SolidColor(AppColors.Primary))
+                    colors = ButtonDefaults.textButtonColors(contentColor = AppColors.Primary)
                 ) {
-                    Text("모두 읽음 표시")
+                    Text("모두 읽음", fontWeight = FontWeight.Bold)
                 }
             }
         }

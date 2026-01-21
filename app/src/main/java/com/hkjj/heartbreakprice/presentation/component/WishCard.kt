@@ -1,5 +1,6 @@
 package com.hkjj.heartbreakprice.presentation.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -54,9 +55,10 @@ fun WishCard(
     onRemove: () -> Unit,
 ) {
     Card(
-        shape = RoundedCornerShape(8.dp),
+        shape = RoundedCornerShape(12.dp),
         colors = CardDefaults.cardColors(containerColor = AppColors.White),
-        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
+        border = BorderStroke(1.dp, AppColors.Gray100)
     ) {
         Column {
             // Image Area
@@ -79,14 +81,14 @@ fun WishCard(
                         val discount = ((1 - wishProduct.price.toDouble() / original) * 100).toInt()
                         Box(
                             modifier = Modifier
-                                .background(AppColors.Error, RoundedCornerShape(8.dp))
-                                .padding(horizontal = 6.dp)
-                                .padding(bottom = 4.dp)
+                                .background(AppColors.Accent, RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = "$discount% 할인",
                                 color = AppColors.White,
-                                style = MaterialTheme.typography.labelSmall
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -95,14 +97,14 @@ fun WishCard(
                     if (targetPriceText.isNotEmpty()) {
                         Box(
                             modifier = Modifier
-                                .background(targetPriceColor, RoundedCornerShape(8.dp))
-                                .padding(horizontal = 6.dp)
-                                .padding(bottom = 4.dp)
+                                .background(targetPriceColor, RoundedCornerShape(6.dp))
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
                             Text(
                                 text = targetPriceText,
                                 color = AppColors.White,
-                                style = MaterialTheme.typography.labelSmall
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold
                             )
                         }
                     }
@@ -170,7 +172,7 @@ fun WishCard(
                         text = "${NumberFormat.getNumberInstance(Locale.KOREA).format(wishProduct.targetPrice)}원",
                         style = MaterialTheme.typography.titleMedium,
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.primary
+                        color = AppColors.Primary
                     )
                 }
 
@@ -205,12 +207,15 @@ fun WishCard(
 
                     Button(
                         onClick = onRemove,
-                        colors = ButtonDefaults.textButtonColors(contentColor = AppColors.Error),
-                        modifier = Modifier.width(32.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = AppColors.Accent.copy(alpha = 0.1f),
+                            contentColor = AppColors.Accent
+                        ),
+                        modifier = Modifier.width(44.dp),
                         contentPadding = PaddingValues(0.dp),
-                        shape = RoundedCornerShape(4.dp)
+                        shape = RoundedCornerShape(8.dp)
                     ) {
-                        Icon(Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.size(16.dp))
+                        Icon(Icons.Default.Delete, contentDescription = "Delete", modifier = Modifier.size(18.dp))
                     }
                 }
             }

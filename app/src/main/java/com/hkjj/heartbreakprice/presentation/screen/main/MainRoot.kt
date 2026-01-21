@@ -37,6 +37,7 @@ fun MainRoot(
         Triple("settings", Icons.Default.Settings, "설정")
     )
     val currentRoute by bottomNavController.currentBackStackEntryAsState()
+    val isSelected = { route: String -> currentRoute?.destination?.route == route }
 
     Scaffold(
         topBar = {
@@ -59,8 +60,9 @@ fun MainRoot(
                 containerColor = AppColors.White
             ) {
                 items.forEach { (route, icon, label) ->
+                    val selected = isSelected(route)
                     NavigationBarItem(
-                        selected = currentRoute?.destination?.route == route,
+                        selected = selected,
                         onClick = {
                             bottomNavController.navigate(route) {
                                 popUpTo(bottomNavController.graph.findStartDestination().id) {
@@ -70,9 +72,28 @@ fun MainRoot(
                                 restoreState = true
                             }
                         },
-                        icon = { Icon(icon, contentDescription = label) },
-                        label = { Text(label) },
-                        alwaysShowLabel = true
+                        icon = { 
+                            Icon(
+                                icon, 
+                                contentDescription = label,
+                                tint = if (selected) AppColors.Primary else AppColors.Gray400
+                            ) 
+                        },
+                        label = { 
+                            Text(
+                                label,
+                                color = if (selected) AppColors.Primary else AppColors.Gray400,
+                                fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal
+                            ) 
+                        },
+                        alwaysShowLabel = true,
+                        colors = NavigationBarItemDefaults.colors(
+                            indicatorColor = AppColors.Transparent,
+                            selectedIconColor = AppColors.Primary,
+                            unselectedIconColor = AppColors.Gray400,
+                            selectedTextColor = AppColors.Primary,
+                            unselectedTextColor = AppColors.Gray400
+                        )
                     )
                 }
             }

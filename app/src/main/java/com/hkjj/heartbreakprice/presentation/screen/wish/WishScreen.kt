@@ -4,6 +4,7 @@ package com.hkjj.heartbreakprice.presentation.screen.wish
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -19,7 +20,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -62,42 +62,44 @@ fun WishScreen(
             Text("검색 페이지에서 상품을 즐겨찾기에 추가해보세요", color = AppColors.Gray500)
         }
     } else {
-        Column(
+        LazyColumn(
             modifier = modifier
                 .fillMaxSize()
-                .background(AppColors.Background)
-                .padding(16.dp)
+                .background(AppColors.Background),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(16.dp)
         ) {
-            Text(
-                text = "즐겨찾기",
-                style = MaterialTheme.typography.headlineMedium,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "총 ${state.wishProducts.size}개의 상품을 추적하고 있습니다",
-                color = AppColors.Gray500,
-                style = MaterialTheme.typography.bodyMedium,
-                modifier = Modifier.padding(bottom = 16.dp)
-            )
-
-            LazyColumn(
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-            ) {
-                items(state.wishProducts) { product ->
-                    WishCard(
-                        wishProduct = product,
-                        onRemove = {
-                            onAction(WishAction.OnDeleteClick(product.id))
-                        },
-                        targetPriceText = if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
-                        targetPriceColor = if (product.price <= product.targetPrice) {
-                            AppColors.Success
-                        } else {
-                            AppColors.Primary
-                        },
-                        onTargetPriceButtonClick = { onAction(WishAction.OnShowDialog(product.id)) }
+            item {
+                Column {
+                    Text(
+                        text = "즐겨찾기",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = AppColors.Gray900
+                    )
+                    Text(
+                        text = "총 ${state.wishProducts.size}개의 상품을 추적하고 있습니다",
+                        color = AppColors.Gray500,
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
                     )
                 }
+            }
+
+            items(state.wishProducts) { product ->
+                WishCard(
+                    wishProduct = product,
+                    onRemove = {
+                        onAction(WishAction.OnDeleteClick(product.id))
+                    },
+                    targetPriceText = if (product.price <= product.targetPrice) "목표가 도달" else "추적중",
+                    targetPriceColor = if (product.price <= product.targetPrice) {
+                        AppColors.Success
+                    } else {
+                        AppColors.Primary
+                    },
+                    onTargetPriceButtonClick = { onAction(WishAction.OnShowDialog(product.id)) }
+                )
             }
         }
     }

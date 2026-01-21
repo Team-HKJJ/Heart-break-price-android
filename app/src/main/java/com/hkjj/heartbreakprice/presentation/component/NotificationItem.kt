@@ -83,7 +83,7 @@ fun NotificationItem(
                             .size(32.dp)
                             .background(
                                 color = when (notification.type) {
-                                    NotificationType.PRICE_DROP -> AppColors.PrimaryLight
+                                    NotificationType.PRICE_DROP -> AppColors.Primary.copy(alpha = 0.1f)
                                     NotificationType.TARGET_REACHED -> AppColors.Success.copy(alpha = 0.1f)
                                     NotificationType.BACK_IN_STOCK -> AppColors.Warning.copy(alpha = 0.1f)
                                 },
@@ -144,9 +144,17 @@ fun NotificationItem(
                             color = AppColors.Primary
                         )
                         Spacer(modifier = Modifier.width(8.dp))
-                        Badge(containerColor = AppColors.Error) {
+                        Badge(
+                            containerColor = AppColors.Accent.copy(alpha = 0.1f),
+                            contentColor = AppColors.Accent
+                        ) {
                             val discount = ((1.0 - notification.newPrice.toDouble() / notification.oldPrice) * 100).toInt()
-                            Text("$discount% 할인", color = AppColors.White, maxLines = 1)
+                            Text(
+                                "$discount% 할인",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(horizontal = 4.dp)
+                            )
                         }
                     }
                 }
