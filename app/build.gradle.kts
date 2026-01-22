@@ -7,13 +7,17 @@ plugins {
 
     // Kotlin Serialization
     alias(libs.plugins.kotlin.serialization)
+
+    //firebase
+    id("com.google.gms.google-services")
+
+    // Secrets Gradle Plugin for Android
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 android {
     namespace = "com.hkjj.heartbreakprice"
-    compileSdk {
-        version = release(36)
-    }
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.hkjj.heartbreakprice"
@@ -45,6 +49,18 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
+    }
+    flavorDimensions += listOf("version")
+    productFlavors {
+        create("dev") {
+            dimension = "version"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
+        }
+        create("prod") {
+            dimension = "version"
+        }
     }
 }
 
@@ -57,6 +73,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.androidx.compose.material.icons.extended)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -83,10 +100,18 @@ dependencies {
     // Retrofit
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.retrofit.converter.scalars)
 
     // Kotlin Serialization
     implementation(libs.kotlinx.serialization.json)
 
     // Mockk
     testImplementation(libs.mockk)
+
+    // firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
+    implementation(libs.firebase.messaging)
+    implementation(libs.firebase.analytics)
 }
