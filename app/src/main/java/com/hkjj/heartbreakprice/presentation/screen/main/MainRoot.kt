@@ -53,21 +53,7 @@ fun MainRoot(
     val isSelected = { route: String -> currentRoute?.destination?.route == route }
 
     Scaffold(
-        topBar = {
-            CenterAlignedTopAppBar(
-                title = {
-                    Text(
-                        stringResource(R.string.app_name),
-                        style = MaterialTheme.typography.titleLarge,
-                        fontWeight = FontWeight.Bold
-                    )
-                },
-                colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = AppColors.White,
-                    titleContentColor = AppColors.Gray900
-                )
-            )
-        },
+
         bottomBar = {
             NavigationBar(
                 containerColor = AppColors.White
