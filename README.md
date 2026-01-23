@@ -36,7 +36,7 @@
 
 | 상품 검색 | 즐겨찾기 및 목표가 설정 | 푸시 알림 |
 |:---:|:---:|:---:|
-| <img src="docs/search_screenshot.png" width="200" /> | <img src="docs/wishlist_screenshot.png" width="200" /> | <img src="docs/notification_screenshot.png" width="200" /> |
+| <img width="200" height="400" alt="Screenshot_20260123_163257" src="https://github.com/user-attachments/assets/7bcbd7ba-1e2a-49d4-81c9-09eb456c125f" /> | <img width="200" height="400" alt="Screenshot_20260123_164559" src="https://github.com/user-attachments/assets/fbd159a9-8614-4309-8c1f-d8b6b15c6e95" /><img width="200" height="400" alt="Screenshot_20260123_164547" src="https://github.com/user-attachments/assets/84857d05-580e-47db-bb79-7d52aa6d9449" /> | <img width="200" height="400" alt="Screenshot_20260123_164707" src="https://github.com/user-attachments/assets/441212e6-4df3-4dad-8613-1830b9b056fe" /> |
 | 네이버 쇼핑 API를 통한<br>빠른 상품 검색 | 관심 상품 등록 및<br>목표 가격(Target Price) 설정 | 가격 하락 시<br>실시간 FCM 푸시 알림 |
 
 *   **🔍 스마트 검색**: 네이버 쇼핑 연동으로 방대한 상품 데이터베이스 검색 지원.
@@ -68,9 +68,21 @@
 
 이 프로젝트는 유지보수성과 확장성을 고려하여 **Clean Architecture** 원칙을 따르며, **MVVM** 패턴을 기반으로 구현되었습니다.
 
+<img width="1408" height="768" alt="Gemini_Generated_Image_v2k3lav2k3lav2k3" src="https://github.com/user-attachments/assets/85e14526-9cba-4d18-8da0-504c49a92214" />
 
 ## 📸 Screenshots & Demo
 
+| 🔐 로그인 및 회원가입 | 🔍 상품 검색 및 결과 |
+| :---: | :---: |
+| <img width="200" height="400" alt="Screenshot_20260123_164932" src="https://github.com/user-attachments/assets/5e512a2c-3c3b-48d2-8d4e-d7f004a3ca4e" /> <img width="200" height="400" alt="Screenshot_20260123_165028" src="https://github.com/user-attachments/assets/3da8d239-e14f-48a1-9509-a2af372bc841" /> | <img width="200" height="400" alt="Screenshot_20260123_163257" src="https://github.com/user-attachments/assets/7bcbd7ba-1e2a-49d4-81c9-09eb456c125f" /> <img width="200" height="400" alt="Screenshot_20260123_164912" src="https://github.com/user-attachments/assets/458f7c39-0d7d-4532-a18a-714aed6accd7" /> |
+
+| 🧡 위시리스트 (Wish) | 🔔 가격 변동 알림 |
+| :---: | :---: |
+| <img width="200" height="400" alt="Screenshot_20260123_164559" src="https://github.com/user-attachments/assets/f2d7f79d-bac2-4aea-839b-1efd1208633c" /> <img width="200" height="400" alt="Screenshot_20260123_164547" src="https://github.com/user-attachments/assets/c9a40f9b-b23b-4c2e-8f39-7083c74a5f44" /> | <img width="200" height="400" alt="Screenshot_20260123_164707" src="https://github.com/user-attachments/assets/3dc1b5c9-8f9b-4c3e-b381-ff08a3d2a647" /> <img width="200" height="400" alt="Screenshot_20260123_164811" src="https://github.com/user-attachments/assets/d2752754-50a3-4076-8dbc-1bcee70016fd" /> |
+
+| ⚙️ 설정 (Setting) |
+| :---: |
+| <img width="200" height="400" alt="Screenshot_20260123_164756" src="https://github.com/user-attachments/assets/8a50241e-b455-4651-8b84-366e0662c811" /> |
 
 ## 🤝 협업 방식 및 개발 문화
 
